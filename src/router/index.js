@@ -2,24 +2,24 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Login from '@/components/Login'
 import AdminLogin from '@/components/AdminLogin'
-import StudentInfo from "@/components/admin/StudentInfo";
-import TeacherInfo from "@/components/admin/TeacherInfo";
-import ClassInfo from "@/components/admin/ClassInfo";
+import StudentInfo from '@/components/admin/StudentInfo'
+import TeacherInfo from '@/components/admin/TeacherInfo'
+import ClassInfo from '@/components/admin/ClassInfo'
 
-import AdminHome from "@/components/AdminHome";
-import StudentHome from "@/components/StudentHome";
-import TeacherHome from "@/components/TeacherHome";
+import AdminHome from '@/components/AdminHome'
+import StudentHome from '@/components/StudentHome'
+import TeacherHome from '@/components/TeacherHome'
 
-import TeacherWork from "@/components/teacher/TeacherWork";
-import WorkPublish from "@/components/teacher/WorkPublish";
-import BankManagement from "@/components/teacher/BankManagement";
-import WorkDetailList from "@/components/teacher/WorkDetailList";
-import WorkDetail from "@/components/student/WorkDetail";
+import TeacherWork from '@/components/teacher/TeacherWork'
+import WorkPublish from '@/components/teacher/WorkPublish'
+import BankManagement from '@/components/teacher/BankManagement'
+import WorkDetailList from '@/components/teacher/WorkDetailList'
+import WorkDetail from '@/components/student/WorkDetail'
 
-import StudentIndex from "@/components/student/StudentIndex";
-import PasswordModify from "@/components/common/PasswordModify";
-import ChooseCourse from "../components/admin/ChooseCourse";
-
+import StudentIndex from '@/components/student/StudentIndex'
+import PastWork from '../components/student/PastWork.vue'
+import PasswordModify from '@/components/common/PasswordModify'
+import ChooseCourse from '../components/admin/ChooseCourse'
 
 Vue.use(Router)
 
@@ -88,7 +88,7 @@ export default new Router({
       name: 'StudentHome',
       component: StudentHome,
       redirect: '/studentIndex',
-      children:[
+      children: [
         {
           path: '/studentIndex',
           name: 'StudentIndex',
@@ -104,8 +104,16 @@ export default new Router({
           meta: {
             requireAuth: true
           }
+        },
+        {
+          path: '/pastWork',
+          name: 'PastWork',
+          component: PastWork,
+          meta: {
+            requireAuth: true
+          }
         }
-      ],
+      ]
     },
     {
       path: '/teacher',
@@ -147,7 +155,7 @@ export default new Router({
           }
         }
       ]
-    },
+    }
 
   ]
 })

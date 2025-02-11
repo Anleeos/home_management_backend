@@ -1,0 +1,110 @@
+[ 
+{ "id": 1, 
+"workDetail": { "id": 1, "workTitle": "安卓开发", "publishContent": "第一个发布作业内容", "answer": "第一个发布作业答案" }, 
+"teacher": 
+    { "id": 1, "user": { "id": 3, "account": "T116263000101", "password": "123456", "type": 2 }, "name": "李杰", "sex": "男" }, 
+"student": 
+    { "id": 1, "user": { "id": 5, "account": "116263000101", "password": "123456", "type": 3 }, "name": "钱文震", "sex": "男", "mClass": { "id": 1, "classId": "20160001", "className": "99软件" } }, 
+"submitContent": "时代法国红酒看来", 
+"state": "已提交", 
+"startTime": "2019-06-24 09:14:26", 
+"endTime": "2019-07-05 16:16:49", "score": 9900000 }
+, 
+{ "id": 3, "workDetail": 
+{ "id": 3, "workTitle": "课程设计", "publishContent": "第三个发布作业内容", "answer": "第三个发布作业答案" }
+, "teacher": 
+{ "id": 1, "user": 
+{ "id": 3, "account": "T116263000101", "password": "123456", "type": 2 }
+, "name": "李杰", "sex": "男" }
+, "student": 
+{ "id": 1, "user": 
+{ "id": 5, "account": "116263000101", "password": "123456", "type": 3 }
+, "name": "钱文震", "sex": "男", "mClass": 
+{ "id": 1, "classId": "20160001", "className": "99软件" }
+ }
+, "submitContent": "提交内容", "state": "已提交", "startTime": "2019-06-24 09:14:26", "endTime": "2019-07-05 16:16:49", "score": 99 }
+, 
+{ "id": 7, "workDetail": 
+{ "id": 13, "workTitle": "发布测试33333", "publishContent": "1 、 第一题内容\n\n2 、 第二题内容\n\n3 、 第三题内容\n\n4 、 第四题内容\n\n", "answer": "1 、 第一题答案\n\n2 、 第二题答案\n\n3 、 第三题答案\n\n4 、 第四题答案\n\n" }
+, "teacher": 
+{ "id": 7, "user": 
+{ "id": 11, "account": "T116263000107", "password": "123456", "type": 2 }
+, "name": "孟美岐", "sex": "女" }
+, "student": 
+{ "id": 1, "user": 
+{ "id": 5, "account": "116263000101", "password": "123456", "type": 3 }
+, "name": "钱文震", "sex": "男", "mClass": 
+{ "id": 1, "classId": "20160001", "className": "99软件" }
+ }
+, "submitContent": "发布测试", "state": "未提交", "startTime": "2019-07-04 03:25:11", "endTime": "2019-07-04 03:25:11", "score": 0 }
+, 
+{ "id": 9, "workDetail": 
+{ "id": 14, "workTitle": "哥哥哥各个", "publishContent": "1 、 第一题内容\n\n2 、 第二题内容\n\n3 、 第三题内容\n\n4 、 第四题内容\n\n", "answer": "1 、 第一题答案\n\n2 、 第二题答案\n\n3 、 第三题答案\n\n4 、 第四题答案\n\n" }
+, "teacher": 
+{ "id": 7, "user": 
+{ "id": 11, "account": "T116263000107", "password": "123456", "type": 2 }
+, "name": "孟美岐", "sex": "女" }
+, "student": 
+{ "id": 1, "user": 
+{ "id": 5, "account": "116263000101", "password": "123456", "type": 3 }
+, "name": "钱文震", "sex": "男", "mClass": 
+{ "id": 1, "classId": "20160001", "className": "99软件" }
+ }
+, "submitContent": "发布测试", "state": "未提交", "startTime": "2019-07-04 03:29:50", "endTime": "2019-07-04 03:29:50", "score": 0 }
+, 
+{ "id": 11, "workDetail": 
+{ "id": 15, "workTitle": "伽古拉就是感觉", "publishContent": "1 、 第二题内容\n\n2 、 第三题内容\n\n3 、 第四题内容\n\n4 、 第五题内容\n\n", "answer": "1 、 第二题答案\n\n2 、 第三题答案\n\n3 、 第四题答案\n\n4 、 第五题答案\n\n" }
+, "teacher": 
+{ "id": 2, "user": 
+{ "id": 4, "account": "T116263000102", "password": "123456", "type": 2 }
+, "name": "曾俊雄", "sex": "男" }
+, "student": 
+{ "id": 1, "user": 
+{ "id": 5, "account": "116263000101", "password": "123456", "type": 3 }
+, "name": "钱文震", "sex": "男", "mClass": 
+{ "id": 1, "classId": "20160001", "className": "99软件" }
+ }
+, "submitContent": "发布测试", "state": "未提交", "startTime": "2019-07-04 04:56:56", "endTime": "2019-07-18 00:00:00", "score": 0 }
+, 
+{ "id": 16, "workDetail": 
+{ "id": 19, "workTitle": "000000", "publishContent": "1 、 第二题内容\n\n2 、 第三题内容\n\n1 、 第二题内容\n\n2 、 第三题内容\n\n3 、 第四题内容\n\n", "answer": "1 、 第二题答案\n\n2 、 第三题答案\n\n1 、 第二题答案\n\n2 、 第三题答案\n\n3 、 第四题答案\n\n" }
+, "teacher": 
+{ "id": 2, "user": 
+{ "id": 4, "account": "T116263000102", "password": "123456", "type": 2 }
+, "name": "曾俊雄", "sex": "男" }
+, "student": 
+{ "id": 1, "user": 
+{ "id": 5, "account": "116263000101", "password": "123456", "type": 3 }
+, "name": "钱文震", "sex": "男", "mClass": 
+{ "id": 1, "classId": "20160001", "className": "99软件" }
+ }
+, "submitContent": "", "state": "未提交", "startTime": "2019-07-04 05:04:56", "endTime": "2019-07-12 00:00:00", "score": 0 }
+, 
+{ "id": 18, "workDetail": 
+{ "id": 20, "workTitle": "6456456456", "publishContent": "1 、 第二题内容\n\n2 、 第三题内容\n\n", "answer": "1 、 第二题答案\n\n2 、 第三题答案\n\n" }
+, "teacher": 
+{ "id": 2, "user": 
+{ "id": 4, "account": "T116263000102", "password": "123456", "type": 2 }
+, "name": "曾俊雄", "sex": "男" }
+, "student": 
+{ "id": 1, "user": 
+{ "id": 5, "account": "116263000101", "password": "123456", "type": 3 }
+, "name": "钱文震", "sex": "男", "mClass": 
+{ "id": 1, "classId": "20160001", "className": "99软件" }
+ }
+, "submitContent": "", "state": "未提交", "startTime": "2019-07-04 05:05:53", "endTime": "2019-07-18 00:00:00", "score": 0 }
+, 
+{ "id": 21, "workDetail": 
+{ "id": 24, "workTitle": "asA", "publishContent": "1 、 asdsdadssadads\n\n2 、 第二题内容\n\n3 、 第三题内容\n\n", "answer": "1 、 第一题答案fsfaas\n\n2 、 第二题答案\n\n3 、 vxcb,\n\n" }
+, "teacher": 
+{ "id": 1, "user": 
+{ "id": 3, "account": "T116263000101", "password": "123456", "type": 2 }
+, "name": "李杰", "sex": "男" }
+, "student": 
+{ "id": 1, "user": 
+{ "id": 5, "account": "116263000101", "password": "123456", "type": 3 }
+, "name": "钱文震", "sex": "男", "mClass": 
+{ "id": 1, "classId": "20160001", "className": "99软件" }
+ }
+, "submitContent": "", "state": "未提交", "startTime": "2025-02-07 02:03:57", "endTime": "2025-02-05 00:00:00", "score": 0 }
+ ]

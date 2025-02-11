@@ -13,7 +13,7 @@
             v-model="keywords">
           </el-input>
           <el-button size="medium" type="primary" icon="el-icon-search"
-                     style="background-color: #545c64"@click="searchClick">搜 索</el-button>
+                     style="background-color: #545c64" @click="searchClick">搜 索</el-button>
 
 <!--          <el-input style="width: 300px" v-model="input" placeholder="请输入内容"></el-input>-->
 <!--          <el-button type="primary" style="background-color: #545c64" v-on:click="getUsers">查询</el-button>-->
@@ -90,7 +90,6 @@
 <!--            <el-input v-model="addForm.name" auto-complete="off"></el-input>-->
 <!--          </el-form-item>-->
 
-
           <el-form-item label="班级" prop="className">
             <el-select v-model="addForm.classOptionsValue" placeholder="请选择" @change="addFormClassOptionValue">
               <el-option
@@ -126,7 +125,7 @@
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="addFormVisible = false">取 消</el-button>
-          <el-button type="primary"style="background-color: #545c64" @click.native="addSubmit" :loading="listenLoading">提 交</el-button>
+          <el-button type="primary" style="background-color: #545c64" @click.native="addSubmit" :loading="listenLoading">提 交</el-button>
         </div>
       </el-dialog>
 
@@ -168,405 +167,379 @@
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="editFormVisible = false">取 消</el-button>
-          <el-button type="primary"style="background-color: #545c64" @click.native="editSubmit" :loading="listenLoading">提 交</el-button>
+          <el-button type="primary" style="background-color: #545c64" @click.native="editSubmit" :loading="listenLoading">提 交</el-button>
         </div>
       </el-dialog>
-
 
     </div>
 </template>
 
 <script>
 
+export default {
+  name: 'Course',
+  components: {
+  },
+  data () {
+    return {
+      input: '',
+      chooseCourses: [], // 课程安排信息
+      courseList: [], // 课程列表信息
+      classes: [], // 班级信息
+      teachers: [], // 教师信息
+      user: {
+        id: '',
+        account: '',
+        password: '',
+        type: ''
+      },
+      mClass: {
+        id: '',
+        classId: '',
+        className: ''
+      },
+      teacher: {
+        id: '',
+        user: '',
+        name: '',
+        type: ''
+      },
+      keywords: '',
+      searchResult: [],
+      listenLoading: false,
 
+      editFormVisible: false, // 编辑界面是否显示
+      editFormRules: {
+        // className: [
+        //   { required: true, message: '请输入班级名', trigger: 'blur' }
+        // ],
+        // teacherName: [
+        //   { required: true, message: '请输入教师名', trigger: 'blur' }
+        // ],
+        // courseName: [
+        //   { required: true, message: '请选择课程', trigger: 'blur' }
+        // ]
+      },
+      // 编辑界面数据
+      editForm: {
+        id: '',
+        className: '',
+        name: '',
+        courseName: '',
+        // 三个下拉框的默认选项
+        courseOptionsValue: '',
+        classOptionsValue: '',
+        teacherOptionsValue: ''
+      },
 
-  export default {
-    name: 'Course',
-    components: {
-       },
-    data() {
-      return {
-        input: '',
-        chooseCourses: [], //课程安排信息
-        courseList: [], //课程列表信息
-        classes:[], //班级信息
-        teachers: [], //教师信息
-        user:{
-          id: '',
-          account: '',
-          password: '',
-          type: ''
-        },
-        mClass:{
-          id: '',
-          classId: '',
-          className: '',
-        },
-        teacher:{
-          id: '',
-          user: '',
-          name: '',
-          type: ''
-        },
-        keywords: '',
-        searchResult: [],
-        listenLoading: false,
+      addFormVisible: false, // 新增界面是否显示
+      addFormRules: {
+        // className:  [
+        //   { required: true, message: '请输入班级名', trigger: 'blur' }
+        // ],
+        // teacherName: [
+        //   { required: true, message: '请输入教师名', trigger: 'blur' }
+        // ],
+        // courseName: [
+        //   { required: true, message: '请选择课程', trigger: 'blur' }
+        // ]
+      },
+      // 新增界面数据
+      addForm: {
+        id: '',
+        className: '',
+        name: '',
+        courseName: '',
 
-        editFormVisible: false,//编辑界面是否显示
-        editFormRules: {
-          // className: [
-          //   { required: true, message: '请输入班级名', trigger: 'blur' }
-          // ],
-          // teacherName: [
-          //   { required: true, message: '请输入教师名', trigger: 'blur' }
-          // ],
-          // courseName: [
-          //   { required: true, message: '请选择课程', trigger: 'blur' }
-          // ]
-        },
-        //编辑界面数据
-        editForm: {
-          id: '',
-          className: '',
-          name: '',
-          courseName: '',
-          //三个下拉框的默认选项
-          courseOptionsValue: '',
-          classOptionsValue: '',
-          teacherOptionsValue: ''
-        },
+        // 三个下拉框的默认选项
+        courseOptionsValue: '',
+        classOptionsValue: '',
+        teacherOptionsValue: ''
 
-        addFormVisible: false,//新增界面是否显示
-        addFormRules: {
-          // className:  [
-          //   { required: true, message: '请输入班级名', trigger: 'blur' }
-          // ],
-          // teacherName: [
-          //   { required: true, message: '请输入教师名', trigger: 'blur' }
-          // ],
-          // courseName: [
-          //   { required: true, message: '请选择课程', trigger: 'blur' }
-          // ]
-        },
-        //新增界面数据
-        addForm: {
-          id: '',
-          className: '',
-          name: '',
-          courseName: '',
+      },
 
-          //三个下拉框的默认选项
-          courseOptionsValue: '',
-          classOptionsValue: '',
-          teacherOptionsValue: ''
+      // 课程名下拉框数据
+      courseOptions: [],
+      // 班级名下拉框数据
+      classOptions: [],
+      // 教师名下拉框数据
+      teacherOptions: [],
 
-
-        },
-
-        // 课程名下拉框数据
-        courseOptions: [],
-        // 班级名下拉框数据
-        classOptions: [],
-        // 教师名下拉框数据
-        teacherOptions:[],
-
-        returnData: {
-         // chooseCourseId:'',
-          courseId: '',
-          classId: '',
-          teacherId: ''
-        }
-
-
-        //三个下拉框的默认选项
-        // courseOptionsValue: '',
-        // classOptionsValue: '',
-        // teacherOptionsValue: ''
+      returnData: {
+        // chooseCourseId:'',
+        courseId: '',
+        classId: '',
+        teacherId: ''
       }
+
+      // 三个下拉框的默认选项
+      // courseOptionsValue: '',
+      // classOptionsValue: '',
+      // teacherOptionsValue: ''
+    }
+  },
+
+  // mounted，组件挂载后，此方法执行后，页面显示
+  mounted: function () {
+    this.loadChooseCourseInfo()
+  },
+
+  methods: {
+    // 关闭dialog时清数据
+    resetForm (formName) {
+      this.$refs[formName].resetFields()
+      this.loadChooseCourseInfo()
     },
 
-    // mounted，组件挂载后，此方法执行后，页面显示
-    mounted: function () {
-      this.loadChooseCourseInfo();
+    addFormCourseOptionValue (value) {
+      this.addForm.courseOptionsValue = value
+      this.returnData.courseId = value
+    },
+    addFormTeacherOptionValue (value) {
+      this.addForm.teacherOptionsValue = value
+      this.returnData.teacherId = value
+    },
+    addFormClassOptionValue (value) {
+      this.addForm.classOptionsValue = value
+      this.returnData.classId = value
     },
 
-    methods: {
-      //关闭dialog时清数据
-      resetForm(formName) {
-        this.$refs[formName].resetFields();
-        this.loadChooseCourseInfo();
-      },
+    editFormCourseOptionValue (value) {
+      this.addForm.courseOptionsValue = value
+      this.returnData.courseId = value
+    },
+    editFormTeacherOptionValue (value) {
+      this.addForm.teacherOptionsValue = value
+      this.returnData.teacherId = value
+    },
+    editFormClassOptionValue (value) {
+      this.addForm.classOptionsValue = value
+      this.returnData.classId = value
+    },
+    // 请求加载课程、班级、教师信息
+    loadChooseCourseInfo () {
+      let _this = this
+      // 请求加载选课安排信息
+      this.$axios.get('/choseCourseInfo').then(resp => {
+        if (resp && resp.status === 200) {
+          _this.chooseCourses = resp.data
+        }
+      })
 
+      // 请求加载课程信息
+      this.$axios.get('/courseList').then(resp => {
+        if (resp && resp.status === 200) {
+          _this.courseList = resp.data
 
-      addFormCourseOptionValue (value) {
-        this.addForm.courseOptionsValue=value;
-        this.returnData.courseId = value;
-      },
-      addFormTeacherOptionValue (value) {
-        this.addForm.teacherOptionsValue=value;
-        this.returnData.teacherId = value;
-      },
-      addFormClassOptionValue (value){
-        this.addForm.classOptionsValue=value;
-        this.returnData.classId = value;
-      },
-
-      editFormCourseOptionValue (value) {
-        this.addForm.courseOptionsValue=value;
-        this.returnData.courseId = value;
-      },
-      editFormTeacherOptionValue (value) {
-        this.addForm.teacherOptionsValue=value;
-        this.returnData.teacherId = value;
-      },
-      editFormClassOptionValue (value){
-        this.addForm.classOptionsValue=value;
-        this.returnData.classId = value;
-      },
-      //请求加载课程、班级、教师信息
-      loadChooseCourseInfo () {
-        let _this = this;
-        //请求加载选课安排信息
-        this.$axios.get('/choseCourseInfo').then(resp => {
-          if (resp && resp.status === 200) {
-            _this.chooseCourses = resp.data;
-
-          }
-        });
-
-        //请求加载课程信息
-        this.$axios.get('/courseList').then(resp => {
-          if (resp && resp.status === 200) {
-            _this.courseList = resp.data;
-
-
-            let tempCourse = [];
-            for (let i = 0; i < _this.courseList.length; ++i) {
-              let tempCourseOption= {
-                value: '',
-                label: ''
-              };
-              let ii = i +1;
-              // tempCourseOption.value = "选项"+ii;
-              tempCourseOption.value = _this.courseList[i].id;
-              tempCourseOption.label = _this.courseList[i].name;
-              tempCourse.push(tempCourseOption)
+          let tempCourse = []
+          for (let i = 0; i < _this.courseList.length; ++i) {
+            let tempCourseOption = {
+              value: '',
+              label: ''
             }
-            this.courseOptions = tempCourse;
-
+            // tempCourseOption.value = "选项"+ii;
+            tempCourseOption.value = _this.courseList[i].id
+            tempCourseOption.label = _this.courseList[i].name
+            tempCourse.push(tempCourseOption)
           }
-        });
+          this.courseOptions = tempCourse
+        }
+      })
 
+      // 请求加载班级信息
+      this.$axios.get('/classInfo').then(resp => {
+        if (resp && resp.status === 200) {
+          _this.classes = resp.data
 
-        //请求加载班级信息
-        this.$axios.get('/classInfo').then(resp => {
-          if (resp && resp.status === 200) {
-            _this.classes = resp.data;
-
-            let tempClasses = [];
-            for (let i = 0; i < _this.classes.length; ++i) {
-              let tempClassOption= {
-                value: '',
-                label: ''
-              };
-              let ii = i +1;
-              // tempCourseOption.value = "选项"+ii;
-              tempClassOption.value = _this.classes[i].id;
-              tempClassOption.label = _this.classes[i].className;
-              tempClasses.push(tempClassOption)
+          let tempClasses = []
+          for (let i = 0; i < _this.classes.length; ++i) {
+            let tempClassOption = {
+              value: '',
+              label: ''
             }
-            this.classOptions = tempClasses;
-
+            // tempCourseOption.value = "选项"+ii;
+            tempClassOption.value = _this.classes[i].id
+            tempClassOption.label = _this.classes[i].className
+            tempClasses.push(tempClassOption)
           }
-        });
+          this.classOptions = tempClasses
+        }
+      })
 
-        //请求加载教师信息
-        this.$axios.get('/teacherInfo').then(resp => {
-          if (resp && resp.status === 200) {
-            _this.teachers = resp.data;
+      // 请求加载教师信息
+      this.$axios.get('/teacherInfo').then(resp => {
+        if (resp && resp.status === 200) {
+          _this.teachers = resp.data
 
-            let tempTeachers = [];
-            for (let i = 0; i < _this.teachers.length; ++i) {
-              let tempTeacherOption= {
-                value: '',
-                label: ''
-              };
-              let ii = i +1;
-              // tempCourseOption.value = "选项"+ii;
-              tempTeacherOption.value = _this.teachers[i].id;
-              tempTeacherOption.label = _this.teachers[i].name;
-              tempTeachers.push(tempTeacherOption)
+          let tempTeachers = []
+          for (let i = 0; i < _this.teachers.length; ++i) {
+            let tempTeacherOption = {
+              value: '',
+              label: ''
             }
-            this.teacherOptions = tempTeachers;
-
+            // tempCourseOption.value = "选项"+ii;
+            tempTeacherOption.value = _this.teachers[i].id
+            tempTeacherOption.label = _this.teachers[i].name
+            tempTeachers.push(tempTeacherOption)
           }
-        });
+          this.teacherOptions = tempTeachers
+        }
+      })
+    },
 
-      },
-
-      //查询
-      searchClick () {
-        let _this = this;
-        this.$axios
-          .post('/searchChoseCourse', {
-            keywords: this.keywords
-          }).then(resp => {
+    // 查询
+    searchClick () {
+      let _this = this
+      this.$axios
+        .post('/searchChoseCourse', {
+          keywords: this.keywords
+        }).then(resp => {
           if (resp && resp.status === 200) {
-            _this.searchResult = resp.data;
-            _this.chooseCourses = _this.searchResult;
-
+            _this.searchResult = resp.data
+            _this.chooseCourses = _this.searchResult
           }
         })
+    },
 
-      },
+    // 显示新增界面
+    handleAdd: function () {
+      this.addFormVisible = true
+      this.addForm = {
+        id: '',
+        mClass: '',
+        teacher: '',
+        courseName: ''
+      }
+    },
+    // 新增
+    addSubmit: function () {
+      this.$refs.addForm.validate((valid) => {
+        if (valid) {
+          this.$confirm('确认提交吗？', '提示', {}).then(() => {
+            this.listenLoading = true
+            this.$axios
+              .post('/addChoseCourse', {
+                chooseCourseId: '',
+                courseId: this.returnData.courseId,
+                teacherId: this.returnData.teacherId,
+                classId: this.returnData.classId
 
-
-      //显示新增界面
-      handleAdd: function () {
-        this.addFormVisible = true;
-        this.addForm = {
-          id: '',
-          mClass: '',
-          teacher: '',
-          courseName:''
-        };
-      },
-      //新增
-      addSubmit: function () {
-        this.$refs.addForm.validate((valid) => {
-          if (valid) {
-            this.$confirm('确认提交吗？', '提示', {}).then(() => {
-              this.listenLoading = true;
-              this.$axios
-                .post('/addChoseCourse', {
-                  chooseCourseId:'',
-                  courseId: this.returnData.courseId,
-                  teacherId: this.returnData.teacherId,
-                  classId: this.returnData.classId
-
-                }).then(resp => {
-                if (resp.data == ''){
+              }).then(resp => {
+                if (resp.data === '') {
                   this.$message({
                     message: '添加失败',
                     type: 'failure'
-                  });
-                  this.listenLoading = false;
-                  this.addFormVisible = false;
+                  })
+                  this.listenLoading = false
+                  this.addFormVisible = false
                 }
                 if (resp && resp.status === 200) {
                   this.$message({
                     message: '添加成功',
                     type: 'success'
-                  });
-                  this.listenLoading = false;
-                  this.addFormVisible = false;
-                  this.loadChooseCourseInfo();
+                  })
+                  this.listenLoading = false
+                  this.addFormVisible = false
+                  this.loadChooseCourseInfo()
                   this.$emit('onSubmit')
                 }
               })
+          })
+        }
+      })
+    },
 
+    // 显示编辑界面
+    handleEdit: function (index, row) {
+      this.editFormVisible = true
+      // this.editForm = Object.assign({}, row);
 
-            });
-          }
-        });
-      },
+      this.editForm = {
+        id: row.id,
+        account: '',
+        name: '',
+        sex: '男'
 
-      //显示编辑界面
-      handleEdit: function (index,row) {
-        this.editFormVisible = true;
-        //this.editForm = Object.assign({}, row);
+        // //三个下拉框的默认选项
+        // courseOptionsValue: row.id.className,
+        // classOptionsValue: '',
+        // teacherOptionsValue: ''
 
-        this.editForm = {
-          id: row.id,
-          account: '',
-          name: '',
-          sex: '男',
+      }
+    },
+    // 编辑
+    editSubmit: function () {
+      this.$refs.editForm.validate((valid) => {
+        if (valid) {
+          this.$confirm('确认提交吗？', '提示', {}).then(() => {
+            this.listenLoading = true
+            this.$axios
+              .post('/updateChoseCourse', {
+                chooseCourseId: this.editForm.id,
+                courseId: this.returnData.courseId,
+                teacherId: this.returnData.teacherId,
+                classId: this.returnData.classId
 
-          // //三个下拉框的默认选项
-          // courseOptionsValue: row.id.className,
-          // classOptionsValue: '',
-          // teacherOptionsValue: ''
-
-        };
-      },
-      //编辑
-      editSubmit: function () {
-        this.$refs.editForm.validate((valid) => {
-          if (valid) {
-            this.$confirm('确认提交吗？', '提示', {}).then(() => {
-              this.listenLoading = true;
-              this.$axios
-                .post('/updateChoseCourse', {
-                  chooseCourseId:this.editForm.id,
-                  courseId: this.returnData.courseId,
-                  teacherId: this.returnData.teacherId,
-                  classId: this.returnData.classId
-
-                }).then(resp => {
-                if (resp.data == ''){
+              }).then(resp => {
+                if (resp.data === '') {
                   this.$message({
                     message: '添加失败',
                     type: 'failure'
-                  });
-                  this.listenLoading = false;
-                  this.addFormVisible = false;
+                  })
+                  this.listenLoading = false
+                  this.addFormVisible = false
                 }
                 if (resp && resp.status === 200) {
                   this.$message({
                     message: '编辑成功',
                     type: 'success'
-                  });
-                  this.listenLoading = false;
-                  this.editFormVisible = false;
-                  this.loadChooseCourseInfo();
+                  })
+                  this.listenLoading = false
+                  this.editFormVisible = false
+                  this.loadChooseCourseInfo()
                   this.$emit('onSubmit')
                 }
               })
-
-
-            });
-          }
-        });
-      },
-
-      //删除课程安排
-      deleteArrange: function (index, row) {
-        this.$confirm('确认删除该记录吗?', '提示', {
-          type: 'warning'
-        }).then(() => {
-            this.listenLoading = true;
-
-
-            this.$axios     //{id: row.id}
-              .post('/deleteChoseCourse', {id: row.id}).then(resp => {
-              if (resp && resp.data.code === 100) {
-                this.listenLoading = false;
-                this.$message({
-                  message: '删除成功',
-                  type: 'success'
-                });
-                this.loadChooseCourseInfo()
-              }else {
-                this.$message({
-                  message: '删除失败',
-                  type: 'failure'
-                });
-                this.listenLoading = false;
-              }
-            })
-          }
-        ).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
           })
+        }
+      })
+    },
+
+    // 删除课程安排
+    deleteArrange: function (index, row) {
+      this.$confirm('确认删除该记录吗?', '提示', {
+        type: 'warning'
+      }).then(() => {
+        this.listenLoading = true
+
+        this.$axios // {id: row.id}
+          .post('/deleteChoseCourse', {id: row.id}).then(resp => {
+            if (resp && resp.data.code === 100) {
+              this.listenLoading = false
+              this.$message({
+                message: '删除成功',
+                type: 'success'
+              })
+              this.loadChooseCourseInfo()
+            } else {
+              this.$message({
+                message: '删除失败',
+                type: 'failure'
+              })
+              this.listenLoading = false
+            }
+          })
+      }
+      ).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
         })
-      },
-
-
-
+      })
     }
+
   }
+}
 </script>
 
 <style scoped>

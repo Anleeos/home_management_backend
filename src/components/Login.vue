@@ -24,76 +24,69 @@
 
 <script>
 
-  export default {
-    name: 'Login',
-    data () {
-      return {
-        logining: false,
-        loginForm: {
-          account: '116263000101',
-          password: '123456'
-        },
-        rules2: {
-          account: [
-            { required: true, message: '请输入账号', trigger: 'blur' },
-          ],
-          password: [
-            { required: true, message: '请输入密码', trigger: 'blur' },
-          ]
-        },
-        checked: false,
-        responseResult: [],
-      }
-    },
-    methods: {
-      login () {
-        var _this = this
-        console.log(this.$store.state)
-        this.$refs.loginForm.validate((valid) =>{
-          if (valid) {
-            this.logining = true
-            this.$axios
-              .post('/login', {
-                account: this.loginForm.account,
-                password: this.loginForm.password
-              })
-              .then(successResponse => {
-                      this.logining = false
-                      if (successResponse.data.code === 200) {//跳转到教师
+export default {
+  name: 'Login',
+  data () {
+    return {
+      logining: false,
+      loginForm: {
+        account: '116263000101',
+        password: '123456'
+      },
+      rules2: {
+        account: [
+          { required: true, message: '请输入账号', trigger: 'blur' }
+        ],
+        password: [
+          { required: true, message: '请输入密码', trigger: 'blur' }
+        ]
+      },
+      checked: false,
+      responseResult: []
+    }
+  },
+  methods: {
+    login () {
+      var _this = this
+      console.log(this.$store.state)
+      this.$refs.loginForm.validate((valid) => {
+        if (valid) {
+          this.logining = true
+          this.$axios
+            .post('/login', {
+              account: this.loginForm.account,
+              password: this.loginForm.password
+            })
+            .then(successResponse => {
+              this.logining = false
+              if (successResponse.data.code === 200) { // 跳转到教师
+                this.$store.commit('login', successResponse.data)
+                // _this.$store.commit('login', _this.loginForm)
+                var path = this.$route.query.redirect
 
-                         this.$store.commit('login',successResponse.data);
-                        //_this.$store.commit('login', _this.loginForm)
-                        var path = this.$route.query.redirect
+                this.$router.replace({path: path === '/' || path === undefined ? '/teacher' : path})
+              } else if (successResponse.data.code === 300) { // 跳转到学生
+                this.$store.commit('login', successResponse.data)
+                // _this.$store.commit('login', _this.loginForm)
 
-                        this.$router.replace({path: path === '/' || path === undefined ? '/teacher' : path})
-                      }else  if (successResponse.data.code === 300) {//跳转到学生
-
-
-                         this.$store.commit('login',successResponse.data);
-                        //_this.$store.commit('login', _this.loginForm)
-                        var path = this.$route.query.redirect
-
-                        this.$router.replace({path: path === '/' || path === undefined ? '/student' : path})
-                      }
-                      else {
-                        _this.$message({
-                    message:'账号或密码错误',
-                    type:'error'
-                  })
-                }
-              })
-              .catch(failResponse => {
-              })
-          }else {
-            console.log('error submit!!');
-            return false;
-          }
-
-        })
-
-      }
+                this.$router.replace({path: path === '/' || path === undefined ? '/student' : path})
+              } else {
+                _this.$message({
+                  message: '账号或密码错误',
+                  type: 'error'
+                })
+              }
+            })
+            .catch(failResponse => {
+            })
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
     }
   }
+}
 </script>
 
 <style>

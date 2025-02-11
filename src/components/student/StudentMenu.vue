@@ -25,24 +25,26 @@
 </template>
 
 <script>
-  export default {
-    name: 'NavMenu',
-    data () {
-      return {
-        navList: [
-        ]
-      }
-    },
-    // methods:{
-    //   handleSelect(key,keypath){
-    //     if (key==='/teacherInfo') {this.$router.push('/teacherInfo')
-    //     }else if(key==='/studentInfo') {this.$router.push('/studentInfo')
-    //     }else if(key==='/classInfo') {this.$router.push('/classInfo')
-    //     }else if(key==='/course') {this.$router.push('/course')
-    //     }
-    //   }
-    // }
+export default {
+  name: 'NavMenu',
+  data () {
+    return {
+      navList: [
+        {name: '/StudentIndex', navItem: '今日作业'},
+        {name: '/PastWork', navItem: '往期作业'}
+      ]
+    }
   }
+  // methods:{
+  //   handleSelect(key,keypath){
+  //     if (key==='/teacherInfo') {this.$router.push('/teacherInfo')
+  //     }else if(key==='/studentInfo') {this.$router.push('/studentInfo')
+  //     }else if(key==='/classInfo') {this.$router.push('/classInfo')
+  //     }else if(key==='/course') {this.$router.push('/course')
+  //     }
+  //   }
+  // }
+}
 </script>
 
 <style scoped>

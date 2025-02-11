@@ -15,12 +15,12 @@
 </template>
 
 <script>
-  import NavMenu from './student/StudentMenu'
-  import CommonHeader from './common/CommonHeader'
-  export default {
-    name: 'StudentHome',
-    components: {CommonHeader,NavMenu}
-  }
+import NavMenu from './student/StudentMenu'
+import CommonHeader from './common/CommonHeader'
+export default {
+  name: 'StudentHome',
+  components: {CommonHeader, NavMenu}
+}
 </script>
 
 <style scoped>

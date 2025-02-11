@@ -78,7 +78,7 @@
     <el-dialog title="编辑题目" :visible.sync="editFormVisible" :append-to-body='true'>
       <el-form :model="editForm" label-width="80px" :rules="editFormRules" ref="editForm">
         <el-form-item label="题号" prop="questionId">
-          <el-input v-model="editForm.questionId" auto-complete="off"readonly="true"></el-input>
+          <el-input v-model="editForm.questionId" auto-complete="off" readonly="true"></el-input>
         </el-form-item>
         <el-form-item label="题目标题" prop="title">
           <el-input v-model="editForm.title" auto-complete="off" ></el-input>
@@ -100,7 +100,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="editFormVisible = false">取 消</el-button>
-        <el-button type="primary"style="background-color: #545c64" @click.native="editSubmit" :loading="listenLoading">保存</el-button>
+        <el-button type="primary" style="background-color: #545c64" @click.native="editSubmit" :loading="listenLoading">保存</el-button>
       </div>
     </el-dialog>
 
@@ -130,7 +130,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="addFormVisible = false">取 消</el-button>
-        <el-button type="primary"style="background-color: #545c64" @click.native="addSubmit" :loading="listenLoading">提 交</el-button>
+        <el-button type="primary" style="background-color: #545c64" @click.native="addSubmit" :loading="listenLoading">提 交</el-button>
       </div>
     </el-dialog>
   </div>
@@ -138,226 +138,213 @@
 
 <script>
 
+export default {
+  name: 'BankManagement',
 
+  data () {
+    return {
+      input: '',
+      banks: '',
 
-  export default {
-    name: 'BankManagement',
+      editFormVisible: false, // 编辑界面是否显示
 
-    data() {
-      return {
-        input: '',
-        banks:'',
+      editFormRules: {
+      },
+      // 编辑界面数据
+      editForm: {
+        id: '',
+        questionId: '',
+        title: '',
+        content: '',
+        answer: ''
+      },
 
+      addFormVisible: false, // 新增界面是否显示
 
-        editFormVisible: false,//编辑界面是否显示
+      addFormRules: {
+      },
+      // 新增界面数据
+      addForm: {
+        questionId: '',
+        title: '',
+        content: '',
+        answer: ''
+      },
 
-        editFormRules: {
-        },
-        //编辑界面数据
-        editForm: {
-          id:'',
-          questionId: '',
-          title: '',
-          content: '',
-          answer: '',
-        },
+      keywords: '',
+      listenLoading: false
+    }
+  },
 
-        addFormVisible: false,//新增界面是否显示
+  // mounted，组件挂载后，此方法执行后，页面显示
+  mounted: function () {
+    this.loadBankInfo()
+  },
+  methods: {
 
-        addFormRules: {
-        },
-        //新增界面数据
-        addForm: {
-          questionId: '',
-          title: '',
-          content: '',
-          answer: '',
-        },
-
-        keywords: '',
-        listenLoading: false,
+    // 请求加载题库信息
+    loadBankInfo () {
+      let _this = this
+      this.$axios.get('/questionBankInfo').then(resp => {
+        if (resp && resp.status === 200) {
+          _this.banks = resp.data
+        }
+      })
+    },
+    // 查询
+    searchClick () {
+      let _this = this
+      this.$axios
+        .post('/searchQuestionBank', {
+          keywords: this.keywords
+        }).then(resp => {
+          if (resp && resp.status === 200) {
+            _this.searchResult = resp.data
+            _this.banks = _this.searchResult
+          }
+        })
+    },
+    // 显示新增界面
+    handleAdd: function () {
+      this.addFormVisible = true
+      this.addForm = {
+        questionId: '',
+        title: '',
+        content: '',
+        answer: ''
       }
     },
 
-    // mounted，组件挂载后，此方法执行后，页面显示
-    mounted: function () {
-      this.loadBankInfo();
-    },
-    methods: {
+    // 新增
+    addSubmit: function () {
+      this.$refs.addForm.validate((valid) => {
+        if (valid) {
+          this.$confirm('确认提交吗？', '提示', {}).then(() => {
+            this.listenLoading = true
 
-      //请求加载题库信息
-      loadBankInfo () {
-        let _this = this
-        this.$axios.get('/questionBankInfo').then(resp => {
-          if (resp && resp.status === 200) {
-            _this.banks = resp.data;
-          }
-        })
-      },
-      //查询
-      searchClick () {
-        let _this = this;
-        this.$axios
-          .post('/searchQuestionBank', {
-            keywords: this.keywords
-          }).then(resp => {
-          if (resp && resp.status === 200) {
-            _this.searchResult = resp.data;
-            _this.banks = _this.searchResult;
-          }
-        })
+            // this.user.id = 88; id是自增的，所以当没有的时候就会默认地往后排序号
 
-      },
-      //显示新增界面
-      handleAdd: function () {
-        this.addFormVisible = true;
-        this.addForm = {
-          questionId: '',
-          title: '',
-          content: '',
-          answer: '',
-        };
-      },
-
-      //新增
-      addSubmit: function () {
-        this.$refs.addForm.validate((valid) => {
-          if (valid) {
-            this.$confirm('确认提交吗？', '提示', {}).then(() => {
-              this.listenLoading = true;
-
-              // this.user.id = 88; id是自增的，所以当没有的时候就会默认地往后排序号
-
-              this.$axios
-                .post('/addQuestionBank', {
-                  // id: 12, id是自增的，所以当没有的时候就会默认地往后排序号
-                  questionId: this.addForm.questionId,
-                  title: this.addForm.title,
-                  content: this.addForm.content,
-                  answer: this.addForm.answer,
-                }).then(resp => {
-
-                if (resp.data == ''){
+            this.$axios
+              .post('/addQuestionBank', {
+                // id: 12, id是自增的，所以当没有的时候就会默认地往后排序号
+                questionId: this.addForm.questionId,
+                title: this.addForm.title,
+                content: this.addForm.content,
+                answer: this.addForm.answer
+              }).then(resp => {
+                if (resp.data === '') {
                   this.$message({
                     message: '添加失败',
                     type: 'failure'
-                  });
-                  this.listenLoading = false;
-                  this.addFormVisible = false;
+                  })
+                  this.listenLoading = false
+                  this.addFormVisible = false
                 }
                 if (resp && resp.status === 200) {
-                  this.listenLoading = false;
-                  this.addFormVisible = false;
+                  this.listenLoading = false
+                  this.addFormVisible = false
                   this.$message({
                     message: '添加成功',
                     type: 'success'
-                  });
-                  this.loadBankInfo();
+                  })
+                  this.loadBankInfo()
                   this.$emit('onSubmit')
                 }
-
               })
+          })
+        }
+      })
+    },
 
-            });
-          }
-        });
-      },
+    // 显示编辑界面
+    handleEdit: function (index, row) {
+      this.editFormVisible = true
+      // this.editForm = Object.assign({}, row);
+      this.editForm = {
+        id: row.id,
+        questionId: row.questionId,
+        title: row.title,
+        content: row.content,
+        answer: row.answer
+      }
+    },
 
+    // 编辑
+    editSubmit: function () {
+      this.$refs.editForm.validate((valid) => {
+        if (valid) {
+          this.$confirm('确认提交吗？', '提示', {}).then(() => {
+            this.listenLoading = true
 
+            this.$axios
+              .post('/updateQuestionBank', {
 
-      //显示编辑界面
-      handleEdit: function (index, row) {
-        this.editFormVisible = true;
-        //this.editForm = Object.assign({}, row);
-        this.editForm = {
-          id:row.id,
-          questionId: row.questionId,
-          title: row.title,
-          content: row.content,
-          answer: row.answer,
-        };
-      },
-
-      //编辑
-      editSubmit: function () {
-        this.$refs.editForm.validate((valid) => {
-          if (valid) {
-            this.$confirm('确认提交吗？', '提示', {}).then(() => {
-              this.listenLoading = true;
-
-
-              this.$axios
-                .post('/updateQuestionBank', {
-
-                  id:this.editForm.id,//要修改的题目ID
-                  questionId: this.editForm.questionId,
-                  title: this.editForm.title,
-                  content: this.editForm.content,
-                  answer: this.editForm.answer,
-                }).then(resp => {
+                id: this.editForm.id, // 要修改的题目ID
+                questionId: this.editForm.questionId,
+                title: this.editForm.title,
+                content: this.editForm.content,
+                answer: this.editForm.answer
+              }).then(resp => {
                 if (resp && resp.status === 200) {
-                  if (resp.data == ''){
+                  if (resp.data === '') {
                     this.$message({
                       message: '修改失败',
                       type: 'failure'
-                    });
-                    this.listenLoading = false;
-                    this.addFormVisible = false;
+                    })
+                    this.listenLoading = false
+                    this.addFormVisible = false
                   }
                   if (resp && resp.status === 200) {
                     // if (resp.data!=null) {
                     this.$message({
                       message: '编辑成功',
                       type: 'success'
-                    });
-                    this.listenLoading = false;
-                    this.editFormVisible = false;
-                    this.loadBankInfo();
+                    })
+                    this.listenLoading = false
+                    this.editFormVisible = false
+                    this.loadBankInfo()
                     this.$emit('onSubmit')
                   }
-
                 }
               })
-
-
-            });
-          }
-        });
-      },
-
-      //删除
-      deleteQuestion: function (index, row) {
-        this.$confirm('确认删除该记录吗?', '提示', {
-          type: 'warning'
-        }).then(() => {
-            this.listenLoading = true;
-            this.$axios     //{id: row.id}
-              .post('/deleteQuestionBank', {id: row.id}).then(resp => {
-              if (resp && resp.data.code === 100) {
-                this.listenLoading = false;
-                this.$message({
-                  message: '删除成功',
-                  type: 'success'
-                });
-                this.loadBankInfo()
-              }else {
-                this.$message({
-                  message: '删除失败',
-                  type: 'failure'
-                });
-                this.listenLoading = false;
-              }
-            })
-          }
-        ).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
           })
+        }
+      })
+    },
+
+    // 删除
+    deleteQuestion: function (index, row) {
+      this.$confirm('确认删除该记录吗?', '提示', {
+        type: 'warning'
+      }).then(() => {
+        this.listenLoading = true
+        this.$axios // {id: row.id}
+          .post('/deleteQuestionBank', {id: row.id}).then(resp => {
+            if (resp && resp.data.code === 100) {
+              this.listenLoading = false
+              this.$message({
+                message: '删除成功',
+                type: 'success'
+              })
+              this.loadBankInfo()
+            } else {
+              this.$message({
+                message: '删除失败',
+                type: 'failure'
+              })
+              this.listenLoading = false
+            }
+          })
+      }
+      ).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
         })
-      },
+      })
     }
   }
+}
 </script>
 
 <style scoped>

@@ -20,39 +20,37 @@
 
 <script>
 
-  export default {
-    name: 'AdminLogin',
-    data () {
-      return {
-        loginForm: {
-          account: '1001',
-          password: '123456'
-        },
-        responseResult: []
-      }
-    },
-    methods: {
-      login () {
-        var _this = this
-        console.log(this.$store.state)
-        this.$axios
-          .post('/admin_login', {
-            account: this.loginForm.account,
-            password: this.loginForm.password
-          })
-          .then(successResponse => {
-            if (successResponse.data.code === 100) {
-
-              this.$store.commit('login',successResponse.data);
-              var path = this.$route.query.redirect
-              this.$router.replace({path: path === '/' || path === undefined ? '/admin' : path})
-            }
-          })
-          .catch(failResponse => {
-          })
-      }
+export default {
+  name: 'AdminLogin',
+  data () {
+    return {
+      loginForm: {
+        account: '1001',
+        password: '123456'
+      },
+      responseResult: []
+    }
+  },
+  methods: {
+    login () {
+      console.log(this.$store.state)
+      this.$axios
+        .post('/admin_login', {
+          account: this.loginForm.account,
+          password: this.loginForm.password
+        })
+        .then(successResponse => {
+          if (successResponse.data.code === 100) {
+            this.$store.commit('login', successResponse.data)
+            var path = this.$route.query.redirect
+            this.$router.replace({path: path === '/' || path === undefined ? '/admin' : path})
+          }
+        })
+        .catch(failResponse => {
+        })
     }
   }
+}
 </script>
 
 <style>

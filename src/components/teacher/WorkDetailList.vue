@@ -44,7 +44,6 @@
           </el-table-column>
         </el-table>
 
-
     </el-main>
     <!--作业批改界面-->
     <el-dialog title="作业详情" :visible.sync="correctFormVisible" :append-to-body='true'>
@@ -65,13 +64,16 @@
             readonly="true"
             :autosize="{ minRows: 8,maxRows:10}"></el-input>
         </el-form-item>
+        <el-form-item label="作业图片" >
+          <el-image style="width: 100px; height: 100px" :src="url" :preview-src-list="srcList"></el-image>
+        </el-form-item>
         <el-form-item label="分数" prop="score">
           <el-input v-model="correctForm.score" auto-complete="off"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="correctFormVisible = false">取 消</el-button>
-        <el-button type="primary"style="background-color: #545c64" @click.native="correctSubmit" :loading="listenLoading">保存</el-button>
+        <el-button type="primary" style="background-color: #545c64" @click.native="correctSubmit" :loading="listenLoading">保存</el-button>
       </div>
     </el-dialog>
   </el-container>
@@ -79,117 +81,115 @@
 </template>
 
 <script>
-    export default {
-        name: "WorkDetailList",
-      data() {
-        return {
-          account:localStorage.getItem("account"),
-          // 详情界面接收作业列表传过来的数据
-          workDetailId:this.$route.query.data.workDetail.id,
-          workId:this.$route.query.data.id,
-          works: [],  //个人账号里面发布的所有作业
-          input: '',
-          correctFormVisible: false,//新增界面是否显示
-          correctLoading: false,
-          correctFormRules: {
-          },
-          //新增界面数据
-          correctForm: {
-            content:'',
-            submit_content: '',
-            score: '',
-          },
-          listenLoading: false,
-        }
+export default {
+  name: 'WorkDetailList',
+  data () {
+    return {
+      account: localStorage.getItem('account'),
+      // 详情界面接收作业列表传过来的数据
+      workDetailId: this.$route.query.data.workDetail.id,
+      workId: this.$route.query.data.id,
+      works: [], // 个人账号里面发布的所有作业
+      input: '',
+      url: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
+      srcList: [
+        'https://fuss10.elemecdn.com/8/27/f01c15bb73e1ef3793e64e6b7bbccjpeg.jpeg'
+      ],
+      correctFormVisible: false, // 新增界面是否显示
+      correctLoading: false,
+      correctFormRules: {
       },
-      // mounted，组件挂载后，此方法执行后，页面显示
-      mounted: function () {
-        this.loadWorkInfo();
-
+      // 新增界面数据
+      correctForm: {
+        content: '',
+        submit_content: '',
+        score: ''
       },
-      methods: {
-
-        //请求加载学生作业信息
-        loadWorkInfo () {
-          let _this = this
-          this.$axios
-            .post('/getTeacherPersonalWork', {
-              keywords: this.account
-            }).then(resp => {
-            if (resp && resp.status === 200) {
-              _this.works = resp.data;
-
-              let tempWorkList = [];
-              for (let i = 0; i < _this.works.length; i++) {
-                if (_this.workDetailId == _this.works[i].workDetail.id){
-                  tempWorkList.push(_this.works[i])
-                  }
-              }
-              _this.works = tempWorkList;
-            }
-          })
-
-        },
-
-        //详细界面返回按钮
-        goBack() {
-          window.history.back()
-          console.log('go back');
-        },
-
-
-        //显示批改界面
-        handleCorrect: function (index, row) {
-          this.correctFormVisible = true;
-          //this.correctForm = Object.assign({}, row);
-          this.correctForm = {
-            content:row.workDetail.publishContent,
-            submit_content:row.submitContent,
-            score:row.score,
-          };
-        },
-
-        //批改
-        correctSubmit: function () {
-          this.$refs.correctForm.validate((valid) => {
-            if (valid) {
-              this.$confirm('确认提交吗？', '提示', {}).then(() => {
-                this.listenLoading = true;
-
-                this.$axios
-                  .post('/checkWork', {
-
-                    workId:this.workId,
-                    score:this.correctForm.score,
-                  }).then(resp => {
-                    if (resp.data == ''){
-                      this.$message({
-                        message: '批改失败',
-                        type: 'failure'
-                      });
-                      this.listenLoading = false;
-                      this.correctForm = false;
-                    }
-                    if (resp.data!=null) {
-                      this.$message({
-                        message: '批改成功',
-                        type: 'success'
-                      });
-                      this.listenLoading = false;
-                      this.correctFormVisible = false;
-                      this.loadWorkInfo();
-                      this.$emit('onSubmit')
-                    }
-
-                })
-
-
-              });
-            }
-          });
-        },
-      }
+      listenLoading: false
     }
+  },
+  // mounted，组件挂载后，此方法执行后，页面显示
+  mounted: function () {
+    this.loadWorkInfo()
+  },
+  methods: {
+
+    // 请求加载学生作业信息
+    loadWorkInfo () {
+      let _this = this
+      this.$axios
+        .post('/getTeacherPersonalWork', {
+          keywords: this.account
+        }).then(resp => {
+          if (resp && resp.status === 200) {
+            _this.works = resp.data
+
+            let tempWorkList = []
+            for (let i = 0; i < _this.works.length; i++) {
+              if (_this.workDetailId === _this.works[i].workDetail.id) {
+                tempWorkList.push(_this.works[i])
+              }
+            }
+            _this.works = tempWorkList
+          }
+        })
+    },
+
+    // 详细界面返回按钮
+    goBack () {
+      window.history.back()
+      console.log('go back')
+    },
+
+    // 显示批改界面
+    handleCorrect: function (index, row) {
+      this.correctFormVisible = true
+      // this.correctForm = Object.assign({}, row);
+      this.correctForm = {
+        content: row.workDetail.publishContent,
+        submit_content: row.submitContent,
+        score: row.score
+      }
+    },
+
+    // 批改
+    correctSubmit: function () {
+      this.$refs.correctForm.validate((valid) => {
+        if (valid) {
+          this.$confirm('确认提交吗？', '提示', {}).then(() => {
+            this.listenLoading = true
+
+            this.$axios
+              .post('/checkWork', {
+
+                workId: this.workId,
+                score: this.correctForm.score
+              }).then(resp => {
+                if (resp.data === '') {
+                  this.$message({
+                    message: '批改失败',
+                    type: 'failure'
+                  })
+                  this.listenLoading = false
+                  this.correctForm = false
+                }
+                if (resp.data != null) {
+                  this.$message({
+                    message: '批改成功',
+                    type: 'success'
+                  })
+                  this.listenLoading = false
+                  this.correctFormVisible = false
+                  this.loadWorkInfo()
+                  this.$emit('onSubmit')
+                }
+              })
+          })
+        }
+      })
+    }
+  }
+}
 
 </script>
 

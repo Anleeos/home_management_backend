@@ -29,38 +29,38 @@
 </template>
 
 <script>
-  import PasswordModifyHeader from './PasswordModifyHeader'
+import PasswordModifyHeader from './PasswordModifyHeader'
 
-  export default {
-    name: 'PasswordModify',
-    components: {PasswordModifyHeader},
-    data () {
-      return {
-        modifying: false,
-        passwordModifyForm: {
-          // account: $store.getters.account(),
-          // password: '123456',
-          // passwordAgain:'123456'
-        },
-        rules2: {
-          account: [
-            { required: true, message: '请输入账号', trigger: 'blur' },
-          ],
-          password: [
-            { required: true, message: '请输入密码', trigger: 'blur' },
-          ],
-          passwordAgain: [
-            { required: true, message: '请再次输入密码', trigger: 'blur' },
-          ]
-        },
-        checked: false,
-        responseResult: [],
-      }
-    },
-    methods: {
-
+export default {
+  name: 'PasswordModify',
+  components: {PasswordModifyHeader},
+  data () {
+    return {
+      modifying: false,
+      passwordModifyForm: {
+        // account: $store.getters.account(),
+        // password: '123456',
+        // passwordAgain:'123456'
+      },
+      rules2: {
+        account: [
+          { required: true, message: '请输入账号', trigger: 'blur' }
+        ],
+        password: [
+          { required: true, message: '请输入密码', trigger: 'blur' }
+        ],
+        passwordAgain: [
+          { required: true, message: '请再次输入密码', trigger: 'blur' }
+        ]
+      },
+      checked: false,
+      responseResult: []
     }
+  },
+  methods: {
+
   }
+}
 </script>
 
 <style>
@@ -83,7 +83,5 @@
     text-align: center;
     color: #505458;
   }
-
-
 
 </style>

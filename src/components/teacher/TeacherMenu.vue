@@ -6,8 +6,7 @@
 
 <template>
   <el-menu class="nav-menu"
-           router :default-active="$route.path"
-    router
+    router :default-active="$route.path"
     mode="horizontal"
 
     background-color="#545c64"
@@ -25,27 +24,26 @@
 </template>
 
 <script>
-  export default {
-    name: 'TeacherMenu',
-    data () {
-      return {
-        navList: [
-          {name: '/teacherWork', navItem: '我的作业'},
-          {name: '/workPublish', navItem: '发布作业'},
-          {name: '/bankManagement', navItem: '题库管理'},
-        ]
-      }
-    },
-    // methods:{
-    //   handleSelect(key,keypath){
-    //     if (key==='/teacherInfo') {this.$router.push('/teacherInfo')
-    //     }else if(key==='/studentInfo') {this.$router.push('/studentInfo')
-    //     }else if(key==='/classInfo') {this.$router.push('/classInfo')
-    //     }else if(key==='/course') {this.$router.push('/course')
-    //     }
-    //   }
-    // }
+export default {
+  name: 'TeacherMenu',
+  data () {
+    return {
+      navList: [
+        {name: '/teacherWork', navItem: '我的作业'},
+        {name: '/workPublish', navItem: '发布作业'}
+      ]
+    }
   }
+  // methods:{
+  //   handleSelect(key,keypath){
+  //     if (key==='/teacherInfo') {this.$router.push('/teacherInfo')
+  //     }else if(key==='/studentInfo') {this.$router.push('/studentInfo')
+  //     }else if(key==='/classInfo') {this.$router.push('/classInfo')
+  //     }else if(key==='/course') {this.$router.push('/course')
+  //     }
+  //   }
+  // }
+}
 </script>
 
 <style scoped>

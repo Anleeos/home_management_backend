@@ -13,7 +13,7 @@
             v-model="keywords">
           </el-input>
           <el-button size="medium" type="primary" icon="el-icon-search"
-                     style="background-color: #545c64"@click="searchClick">搜 索</el-button>
+                     style="background-color: #545c64" @click="searchClick">搜 索</el-button>
 
 <!--          <el-input style="width: 300px" v-model="input" placeholder="请输入内容"></el-input>-->
 <!--          <el-button type="primary" style="background-color: #545c64" v-on:click="getUsers">查询</el-button>-->
@@ -102,7 +102,7 @@
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="addFormVisible = false">取 消</el-button>
-          <el-button type="primary"style="background-color: #545c64" @click.native="addSubmit" :loading="listenLoading">提 交</el-button>
+          <el-button type="primary" style="background-color: #545c64" @click.native="addSubmit" :loading="listenLoading">提 交</el-button>
         </div>
 
       </el-dialog>
@@ -131,342 +131,326 @@
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="editFormVisible = false">取 消</el-button>
-          <el-button type="primary"style="background-color: #545c64" @click.native="editSubmit" :loading="listenLoading">提 交</el-button>
+          <el-button type="primary" style="background-color: #545c64" @click.native="editSubmit" :loading="listenLoading">提 交</el-button>
         </div>
       </el-dialog>
-
 
     </div>
 </template>
 
 <script>
 
+export default {
+  name: 'TeacherInfo',
+  components: {
+  },
+  data () {
+    return {
+      input: '',
+      teachers: [], // 教师信息
+      // teachersTempList: [], //临时数据
+      // teachersTempList2: [], //临时数据
+      user: {
+        id: '',
+        account: '',
+        password: '',
+        type: ''
+      },
+      keywords: '',
+      searchResult: [],
+      listenLoading: false,
 
+      editFormVisible: false, // 编辑界面是否显示
+      editFormRules: {
+        account: [
+          { required: true, message: '请输入工号', trigger: 'blur' }
+        ],
+        password: [
+          { required: true, message: '请输入密码', trigger: 'blur' }
+        ],
+        name: [
+          { required: true, message: '请输入姓名', trigger: 'blur' }
+        ]
+      },
+      // 编辑界面数据
+      editForm: {
+        user: '',
+        name: '',
+        sex: ''
+      },
 
-  export default {
-    name: 'TeacherInfo',
-    components: {
-       },
-    data() {
-      return {
-        input: '',
-        teachers: [], //教师信息
-        // teachersTempList: [], //临时数据
-        // teachersTempList2: [], //临时数据
-        user: {
-          id: '',
-          account: '',
-          password: '',
-          type: ''
-        },
-        keywords: '',
-        searchResult: [],
-        listenLoading: false,
+      addFormVisible: false, // 新增界面是否显示
+      addFormRules: {
+        account: [
+          { required: true, message: '请输入工号', trigger: 'blur' }
+        ],
+        password: [
+          { required: true, message: '请输入密码', trigger: 'blur' }
+        ],
+        name: [
+          { required: true, message: '请输入姓名', trigger: 'blur' }
+        ]
+      },
+      // 新增界面数据
+      addForm: {
+        id: '',
+        account: '',
+        password: '',
+        name: '',
+        sex: ''
+      },
+      radios: 1 // 默认性别为 男
+    }
+  },
 
-        editFormVisible: false,//编辑界面是否显示
-        editFormRules: {
-          account: [
-            { required: true, message: '请输入工号', trigger: 'blur' }
-          ],
-          password: [
-            { required: true, message: '请输入密码', trigger: 'blur' }
-          ],
-          name: [
-            { required: true, message: '请输入姓名', trigger: 'blur' }
-          ]
-        },
-        //编辑界面数据
-        editForm: {
-          user:'',
-          name: '',
-          sex: '',
-        },
+  // mounted，组件挂载后，此方法执行后，页面显示
+  mounted: function () {
+    this.loadTeacherInfo()
+  },
 
-        addFormVisible: false,//新增界面是否显示
-        addFormRules: {
-          account: [
-            { required: true, message: '请输入工号', trigger: 'blur' }
-          ],
-          password: [
-            { required: true, message: '请输入密码', trigger: 'blur' }
-          ],
-          name: [
-            { required: true, message: '请输入姓名', trigger: 'blur' }
-          ]
-        },
-        //新增界面数据
-        addForm: {
-          id: '',
-          account: '',
-          password: '',
-          name: '',
-          sex: '',
-        },
-        radios: 1 //默认性别为 男
+  methods: {
+    // 关闭dialog时清数据
+    resetForm (formName) {
+      this.$refs[formName].resetFields()
+    },
+    // 请求加载教师信息
+    loadTeacherInfo () {
+      let _this = this
+      this.$axios.get('/teacherInfo').then(resp => {
+        if (resp && resp.status === 200) {
+          _this.teachers = resp.data
+
+          // for (let i = 0; i < _this.teachers.length; i++) {
+          //   let teacherTemp = {
+          //     id: '',
+          //     account: '',
+          //     name: '',
+          //     sex: ''
+          //   };
+          //   teacherTemp.id = i+1;
+          //   teacherTemp.account = _this.teachers[i].user.account;
+          //   teacherTemp.name = _this.teachers[i].name;
+          //   teacherTemp.sex = _this.teachers[i].sex;
+          //
+          //   this.teachersTempList.push(teacherTemp);
+          // }
+          //
+          // this.teachersTempList2 = this.teachersTempList;
+          //
+          // this.teachersTempList.clean();
+        }
+      })
+    },
+
+    // transform2() {
+    //   // this.teachersTempList.clear();
+    //   for (let i = 0; i < this.teachers.length; i++) {
+    //     let teacherTemp = {
+    //         id: '',
+    //         account: '',
+    //         name: '',
+    //         sex: ''
+    //     };
+    //     teacherTemp.id = i+1;
+    //     teacherTemp.account = this.teachers[i].user.account;
+    //     teacherTemp.name = this.teachers[i].name;
+    //     teacherTemp.sex = this.teachers[i].sex;
+    //
+    //
+    //     this.teachersTempList.push(teacherTemp);
+    //   }
+    //
+    // },
+
+    // 查询
+    searchClick () {
+      let _this = this
+      this.$axios
+        .post('/searchTeacher', {
+          keywords: this.keywords
+        }).then(resp => {
+          if (resp && resp.status === 200) {
+            _this.searchResult = resp.data
+            _this.teachers = _this.searchResult
+          }
+        })
+    },
+
+    // 显示新增界面
+    handleAdd: function () {
+      this.addFormVisible = true
+      this.addForm = {
+        id: '100',
+        teacherId: '',
+        account: '',
+        name: '',
+        sex: '男'
       }
     },
+    // 新增
+    addSubmit: function () {
+      this.$refs.addForm.validate((valid) => {
+        if (valid) {
+          this.$confirm('确认提交吗？', '提示', {}).then(() => {
+            this.listenLoading = true
 
-    // mounted，组件挂载后，此方法执行后，页面显示
-    mounted: function () {
-      this.loadTeacherInfo();
-    },
+            // this.user.id = 88; id是自增的，所以当没有的时候就会默认地往后排序号
+            this.user.account = this.addForm.account
+            this.user.password = this.addForm.password
+            this.user.type = 2
 
-    methods: {
-    // 关闭dialog时清数据
-      resetForm(formName) {
-        this.$refs[formName].resetFields();
-      },
-      //请求加载教师信息
-      loadTeacherInfo () {
-        let _this = this
-        this.$axios.get('/teacherInfo').then(resp => {
-          if (resp && resp.status === 200) {
-            _this.teachers = resp.data;
-
-            // for (let i = 0; i < _this.teachers.length; i++) {
-            //   let teacherTemp = {
-            //     id: '',
-            //     account: '',
-            //     name: '',
-            //     sex: ''
-            //   };
-            //   teacherTemp.id = i+1;
-            //   teacherTemp.account = _this.teachers[i].user.account;
-            //   teacherTemp.name = _this.teachers[i].name;
-            //   teacherTemp.sex = _this.teachers[i].sex;
-            //
-            //   this.teachersTempList.push(teacherTemp);
-            // }
-            //
-            // this.teachersTempList2 = this.teachersTempList;
-            //
-            // this.teachersTempList.clean();
-
-          }
-        })
-      },
-
-      // transform2() {
-      //   // this.teachersTempList.clear();
-      //   for (let i = 0; i < this.teachers.length; i++) {
-      //     let teacherTemp = {
-      //         id: '',
-      //         account: '',
-      //         name: '',
-      //         sex: ''
-      //     };
-      //     teacherTemp.id = i+1;
-      //     teacherTemp.account = this.teachers[i].user.account;
-      //     teacherTemp.name = this.teachers[i].name;
-      //     teacherTemp.sex = this.teachers[i].sex;
-      //
-      //
-      //     this.teachersTempList.push(teacherTemp);
-      //   }
-      //
-      // },
-
-
-      //查询
-      searchClick () {
-        let _this = this;
-        this.$axios
-          .post('/searchTeacher', {
-            keywords: this.keywords
-          }).then(resp => {
-          if (resp && resp.status === 200) {
-            _this.searchResult = resp.data;
-            _this.teachers = _this.searchResult;
-          }
-        })
-
-      },
-
-
-      //显示新增界面
-      handleAdd: function () {
-        this.addFormVisible = true;
-        this.addForm = {
-          id: '100',
-          teacherId: '',
-          account: '',
-          name: '',
-          sex: '男',
-        };
-      },
-      //新增
-      addSubmit: function () {
-        this.$refs.addForm.validate((valid) => {
-          if (valid) {
-            this.$confirm('确认提交吗？', '提示', {}).then(() => {
-              this.listenLoading = true;
-
-              // this.user.id = 88; id是自增的，所以当没有的时候就会默认地往后排序号
-              this.user.account = this.addForm.account;
-              this.user.password = this.addForm.password;
-              this.user.type = 2;
-
-              this.$axios
-                .post('/addTeacher', {
-                  // id: 12, id是自增的，所以当没有的时候就会默认地往后排序号
-                  user: this.user,
-                  name: this.addForm.name,
-                  sex: this.addForm.sex,
-                }).then(resp => {
-
-                if (resp.data == ''){
+            this.$axios
+              .post('/addTeacher', {
+                // id: 12, id是自增的，所以当没有的时候就会默认地往后排序号
+                user: this.user,
+                name: this.addForm.name,
+                sex: this.addForm.sex
+              }).then(resp => {
+                if (resp.data === '') {
                   this.$message({
                     message: '添加失败',
                     type: 'failure'
-                  });
-                  this.listenLoading = false;
-                  this.addFormVisible = false;
+                  })
+                  this.listenLoading = false
+                  this.addFormVisible = false
                 }
                 if (resp && resp.status === 200) {
-                  this.listenLoading = false;
-                  this.addFormVisible = false;
-                  this.loadTeacherInfo();
+                  this.listenLoading = false
+                  this.addFormVisible = false
+                  this.loadTeacherInfo()
                   this.$emit('onSubmit')
                 }
-
               })
-
-            });
-          }
-        });
-      },
-
-      //添加用户性别选择单选按钮
-      addFormChangeSex(value) {
-        if (value == 1){
-          this.addForm.sex = '男'
+          })
         }
-        if (value == 0) {
-          this.addForm.sex = '女'
-        }
-      },
+      })
+    },
 
-      //编辑用户性别选择单选按钮
-      editFormChangeSex(value) {
-        if (value == 1){
-          this.editForm.sex = '男'
-        }
-        if (value == 0) {
-          this.editForm.sex = '女'
-        }
-      },
+    // 添加用户性别选择单选按钮
+    addFormChangeSex (value) {
+      if (value === 1) {
+        this.addForm.sex = '男'
+      }
+      if (value === 0) {
+        this.addForm.sex = '女'
+      }
+    },
 
-      //显示编辑界面
-      handleEdit: function (index,row) {
-        this.editFormVisible = true;
-        // this.editForm = Object.assign({}, row);
-        this.editForm = {
-          id: row.id,
-          userId:row.user.id,
-          account: row.user.account,
-          password:row.user.password,
-          name: row.name,
-          sex: row.sex,
-        };
-        // for (let i = 0; i < this.teachers.length; i++) {
-        //   if (this.teachers[i].id == this.editForm.id) {
-        //     this.editForm.account = this.teachers[i].user.account;
-        //     this.editForm.password = this.teachers[i].user.password;
-        //     this.editForm.name = this.teachers[i].name;
-        //     this.user.id = this.teachers[i].user.id;
-        //     // this.editForm.teacherId = this.teachers[i].id;
-        //
-        //   }
-        // }
-        if (this.editForm.sex == '男') {
-          this.radios =1;
-        }
-        if (this.editForm.sex == '女') {
-          this.radios =0;
-        }
+    // 编辑用户性别选择单选按钮
+    editFormChangeSex (value) {
+      if (value === 1) {
+        this.editForm.sex = '男'
+      }
+      if (value === 0) {
+        this.editForm.sex = '女'
+      }
+    },
 
-      },
-      //编辑
-      editSubmit: function () {
-        this.$refs.editForm.validate((valid) => {
-          if (valid) {
-            this.$confirm('确认提交吗？', '提示', {}).then(() => {
-              this.listenLoading = true;
+    // 显示编辑界面
+    handleEdit: function (index, row) {
+      this.editFormVisible = true
+      // this.editForm = Object.assign({}, row);
+      this.editForm = {
+        id: row.id,
+        userId: row.user.id,
+        account: row.user.account,
+        password: row.user.password,
+        name: row.name,
+        sex: row.sex
+      }
+      // for (let i = 0; i < this.teachers.length; i++) {
+      //   if (this.teachers[i].id == this.editForm.id) {
+      //     this.editForm.account = this.teachers[i].user.account;
+      //     this.editForm.password = this.teachers[i].user.password;
+      //     this.editForm.name = this.teachers[i].name;
+      //     this.user.id = this.teachers[i].user.id;
+      //     // this.editForm.teacherId = this.teachers[i].id;
+      //
+      //   }
+      // }
+      if (this.editForm.sex === '男') {
+        this.radios = 1
+      }
+      if (this.editForm.sex === '女') {
+        this.radios = 0
+      }
+    },
+    // 编辑
+    editSubmit: function () {
+      this.$refs.editForm.validate((valid) => {
+        if (valid) {
+          this.$confirm('确认提交吗？', '提示', {}).then(() => {
+            this.listenLoading = true
 
-              this.user.id = this.editForm.userId;  //要修改的用户编号
-              this.user.account = this.editForm.account;
-              this.user.password = this.editForm.password;
-              this.user.type = 2;
+            this.user.id = this.editForm.userId // 要修改的用户编号
+            this.user.account = this.editForm.account
+            this.user.password = this.editForm.password
+            this.user.type = 2
 
-              this.$axios
-                .post('/updateTeacher', {
-                  id: this.editForm.id, //要修改的教师工号
-                  user: this.user,
-                  name: this.editForm.name,
-                  sex: this.editForm.sex,
-                }).then(resp => {
+            this.$axios
+              .post('/updateTeacher', {
+                id: this.editForm.id, // 要修改的教师工号
+                user: this.user,
+                name: this.editForm.name,
+                sex: this.editForm.sex
+              }).then(resp => {
                 if (resp && resp.status === 200) {
-                  if (resp.data == ''){
+                  if (resp.data === '') {
                     this.$message({
                       message: '修改失败',
                       type: 'failure'
-                    });
-                    this.listenLoading = false;
-                    this.addFormVisible = false;
+                    })
+                    this.listenLoading = false
+                    this.addFormVisible = false
                   }
                   if (resp && resp.status === 200) {
                   // if (resp.data!=null) {
-                    this.listenLoading = false;
-                    this.editFormVisible = false;
-                    this.loadTeacherInfo();
+                    this.listenLoading = false
+                    this.editFormVisible = false
+                    this.loadTeacherInfo()
                     this.$emit('onSubmit')
                   }
-
                 }
               })
-
-
-            });
-          }
-        });
-      },
-
-      //删除
-      deleteTeacher: function (index, row) {
-        this.$confirm('确认删除该记录吗?', '提示', {
-          type: 'warning'
-        }).then(() => {
-            this.listenLoading = true;
-            this.$axios     //{id: row.id}
-              .post('/deleteTeacher', {id: row.id}).then(resp => {
-              if (resp && resp.data.code === 100) {
-                this.listenLoading = false;
-                this.$message({
-                  message: '删除成功',
-                  type: 'success'
-                });
-                this.loadTeacherInfo()
-              }else {
-                this.$message({
-                  message: '删除失败',
-                  type: 'failure'
-                });
-                this.listenLoading = false;
-              }
-            })
-          }
-        ).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
           })
+        }
+      })
+    },
+
+    // 删除
+    deleteTeacher: function (index, row) {
+      this.$confirm('确认删除该记录吗?', '提示', {
+        type: 'warning'
+      }).then(() => {
+        this.listenLoading = true
+        this.$axios // {id: row.id}
+          .post('/deleteTeacher', {id: row.id}).then(resp => {
+            if (resp && resp.data.code === 100) {
+              this.listenLoading = false
+              this.$message({
+                message: '删除成功',
+                type: 'success'
+              })
+              this.loadTeacherInfo()
+            } else {
+              this.$message({
+                message: '删除失败',
+                type: 'failure'
+              })
+              this.listenLoading = false
+            }
+          })
+      }
+      ).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
         })
-      },
-
-
-
+      })
     }
+
   }
+}
 </script>
 
 <style scoped>

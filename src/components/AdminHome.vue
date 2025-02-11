@@ -12,13 +12,13 @@
 </template>
 
 <script>
-  import AdminMenu from './admin/AdminMenu'
-  import CommonHeader from './common/CommonHeader'
+import AdminMenu from './admin/AdminMenu'
+import CommonHeader from './common/CommonHeader'
 
-  export default {
-    name: 'AdminHome',
-    components: {CommonHeader,AdminMenu}
-  }
+export default {
+  name: 'AdminHome',
+  components: {CommonHeader, AdminMenu}
+}
 </script>
 
 <style scoped>

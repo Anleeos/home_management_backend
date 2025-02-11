@@ -5,8 +5,6 @@
     </a>
     <span style="font-size: 32px;font-weight: bold;position:absolute;left: 100px">作业批改系统</span>
 
-
-
     <el-dropdown  show-timeout="10" hide-timeout="50" style="float: right;padding-right: 10px">
       <div class="el-dropdown-link" >
         <span >
@@ -17,7 +15,7 @@
         </span>
 
         <el-dropdown-menu slot="dropdown" >
-          <el-dropdown-item divided="true"@click.native="passwordModify">修改密码</el-dropdown-item>
+          <el-dropdown-item divided="true" @click.native="passwordModify">修改密码</el-dropdown-item>
           <el-dropdown-item divided="true" @click.native="logOut">退出登录</el-dropdown-item>
           <!--          <el-dropdown-item divided @click.native="logout">退出登录</el-dropdown-item>-->
         </el-dropdown-menu>
@@ -26,40 +24,40 @@
       </div>
     </el-dropdown>
 
-
-
   </el-card>
 </template>
 
 <script>
-  export default {
-    name: 'commonHeader',
-    data(){
-      username:''
+export default {
+  name: 'commonHeader',
+  data () {
+    return {
+      username: ''
+    }
+  },
+  methods: {
+    passwordModify: function () {
+      this.$router.push({
+        path: '/passwordModify'
+      })
     },
-    methods:{
-      passwordModify:function(){
+    // 退出登录
+    logOut: function () {
+      var _this = this
+      this.$confirm('确认退出吗?', '提示', {
+        // type: 'warning'
+      }).then(() => {
+        _this.$store.commit('logout')
+        // _this.$router.push('/login');
         this.$router.push({
-          path: '/passwordModify',
+          path: '/login'
         })
-      },
-      //退出登录
-      logOut: function () {
-        var _this = this;
-        this.$confirm('确认退出吗?', '提示', {
-          //type: 'warning'
-        }).then(() => {
-          _this.$store.commit("logout");
-          //_this.$router.push('/login');
-          this.$router.push({
-            path: '/login',
-          })
-        }).catch(() => {
+      }).catch(() => {
 
-        });
-      }
+      })
     }
   }
+}
 </script>
 
 <style scoped>

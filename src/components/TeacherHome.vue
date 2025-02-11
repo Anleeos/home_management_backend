@@ -12,13 +12,13 @@
 </template>
 
 <script>
-  import TeacherMenu from './teacher/TeacherMenu'
-  import CommonHeader from './common/CommonHeader'
+import TeacherMenu from './teacher/TeacherMenu'
+import CommonHeader from './common/CommonHeader'
 
-  export default {
-    name: 'TeacherHome',
-    components: {CommonHeader,TeacherMenu}
-  }
+export default {
+  name: 'TeacherHome',
+  components: {CommonHeader, TeacherMenu}
+}
 </script>
 
 <style scoped>

@@ -25,36 +25,10 @@
         <el-aside width="20px">
         </el-aside>
         <el-main style="padding-top: 10px;padding-left: 50px">
-          <el-col :span="11">
+          <el-col :span="23">
             <h1 style="text-align: left;">待做作业</h1>
             <el-collapse v-model="activeName" accordion>
-            <el-collapse-item v-for="(work, index) in to_do_works" :key="index">
-              <template slot="title">
-                <div class="work_title">
-                  <span><strong>{{ work.workDetail.workTitle }}</strong></span>
-                  <span :class="state-lable">{{ work.state }}</span>
-                </div>
-              </template>
-              <el-row :gutter="20" justify="space-between">
-                <el-col :span="12" style="text-align: left;">
-                  <p><strong>教师：</strong>{{ work.teacher.name }}<strong style="margin-left: 20px;">截止日期：</strong>{{ work.endTime }}</p>
-                </el-col>
-                <el-col :span="12" style="text-align: right;">
-                  <el-button @click="handleDetail(index, work)">提交作业</el-button>
-                </el-col>
-              </el-row>
-              <div>
-                <el-card class="work-content">
-                  <div>{{ work.workDetail.publishContent }}</div>
-                </el-card>
-              </div>
-            </el-collapse-item>
-          </el-collapse>
-          </el-col>
-          <el-col :span="11" :offset="1">
-            <h1 style="text-align: left;">已完成</h1>
-            <el-collapse v-model="activeName" accordion>
-            <el-collapse-item v-for="(work, index) in done_works" :key="index">
+            <el-collapse-item v-for="(work, index) in works" :key="index">
               <template slot="title">
                 <div class="work_title">
                   <span><strong>{{ work.workDetail.workTitle }}</strong></span>
@@ -109,7 +83,7 @@
 <script>
 
 export default {
-  name: 'StudentIndex',
+  name: 'PastWork',
   components: {
   },
   data () {

@@ -13,7 +13,7 @@
             v-model="keywords">
           </el-input>
           <el-button size="medium" type="primary" icon="el-icon-search"
-                     style="background-color: #545c64"@click="searchClick">搜 索</el-button>
+                     style="background-color: #545c64" @click="searchClick">搜 索</el-button>
 
 <!--          <el-input style="width: 300px" v-model="input" placeholder="请输入内容"></el-input>-->
 <!--          <el-button type="primary" style="background-color: #545c64" v-on:click="getUsers">查询</el-button>-->
@@ -87,7 +87,7 @@
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="addFormVisible = false">取 消</el-button>
-          <el-button type="primary"style="background-color: #545c64" @click.native="addSubmit" :loading="listenLoading">提 交</el-button>
+          <el-button type="primary" style="background-color: #545c64" @click.native="addSubmit" :loading="listenLoading">提 交</el-button>
         </div>
       </el-dialog>
 
@@ -104,248 +104,232 @@
         </el-form>
         <div slot="footer" class="dialog-footer">
           <el-button @click="editFormVisible = false">取 消</el-button>
-          <el-button type="primary"style="background-color: #545c64" @click.native="editSubmit" :loading="listenLoading">提 交</el-button>
+          <el-button type="primary" style="background-color: #545c64" @click.native="editSubmit" :loading="listenLoading">提 交</el-button>
         </div>
       </el-dialog>
-
 
     </div>
 </template>
 
 <script>
 
+export default {
+  name: 'ClassInfo',
+  components: {
+  },
+  data () {
+    return {
 
+      input: '',
+      classs: [], // 教师信息
+      class: {
+        id: '',
+        classId: '',
+        className: ''
+      },
+      keywords: '',
+      searchResult: [],
+      listenLoading: false,
 
-  export default {
-    name: 'ClassInfo',
-    components: {
-       },
-    data() {
-      return {
+      editFormVisible: false, // 编辑界面是否显示
+      editFormRules: {
+        classId: [
+          { required: true, message: '请输入班级号', trigger: 'blur' }
+        ],
+        className: [
+          { required: true, message: '请输入班级名', trigger: 'blur' }
+        ]
+      },
+      // 编辑界面数据
+      editForm: {
+        id: '',
+        classId: '',
+        className: ''
+      },
 
-        input: '',
-        classs: [], //教师信息
-        class:{
-          id: '',
-          classId: '',
-          className: '',
-        },
-        keywords: '',
-        searchResult: [],
-        listenLoading: false,
+      addFormVisible: false, // 新增界面是否显示
+      addFormRules: {
+        classId: [
+          { required: true, message: '请输入班级号', trigger: 'blur' }
+        ],
+        className: [
+          { required: true, message: '请输入班级名', trigger: 'blur' }
+        ]
+      },
+      // 新增界面数据
+      addForm: {
+        id: '',
+        classId: '',
+        className: ''
 
-        editFormVisible: false,//编辑界面是否显示
-        editFormRules: {
-          classId: [
-            { required: true, message: '请输入班级号', trigger: 'blur' }
-          ],
-          className: [
-            { required: true, message: '请输入班级名', trigger: 'blur' }
-          ]
-        },
-        //编辑界面数据
-        editForm: {
-          id: '',
-          classId: '',
-          className: '',
-        },
+      }
+    }
+  },
 
-        addFormVisible: false,//新增界面是否显示
-        addFormRules: {
-          classId: [
-            { required: true, message: '请输入班级号', trigger: 'blur' }
-          ],
-          className: [
-            { required: true, message: '请输入班级名', trigger: 'blur' }
-          ]
-        },
-        //新增界面数据
-        addForm: {
-          id: '',
-          classId: '',
-          className: '',
+  // mounted，组件挂载后，此方法执行后，页面显示
+  mounted: function () {
+    this.loadClassInfo()
+  },
 
+  methods: {
+    // 关闭dialog时清数据
+    resetForm (formName) {
+      this.$refs[formName].resetFields()
+    },
+    // 请求加载班级信息
+    loadClassInfo () {
+      let _this = this
+      this.$axios.get('/classInfo').then(resp => {
+        if (resp && resp.status === 200) {
+          _this.classs = resp.data
         }
+      })
+    },
+
+    // 查询
+    searchClick () {
+      let _this = this
+      this.$axios
+        .post('/searchClass', {
+          keywords: this.keywords
+        }).then(resp => {
+          if (resp && resp.status === 200) {
+            _this.searchResult = resp.data
+
+            _this.classs = _this.searchResult
+          }
+        })
+    },
+
+    // 显示新增界面
+    handleAdd: function () {
+      this.addFormVisible = true
+      this.addForm = {
+        id: '',
+        classId: '',
+        className: ''
       }
     },
+    // 新增
+    addSubmit: function () {
+      this.$refs.addForm.validate((valid) => {
+        if (valid) {
+          this.$confirm('确认提交吗？', '提示', {}).then(() => {
+            this.listenLoading = true
 
-    // mounted，组件挂载后，此方法执行后，页面显示
-    mounted: function () {
-      this.loadClassInfo();
+            // this.user.id = 88; id是自增的，所以当没有的时候就会默认地往后排序号
 
-    },
-
-    methods: {
-      // 关闭dialog时清数据
-      resetForm(formName) {
-        this.$refs[formName].resetFields();
-      },
-      //请求加载班级信息
-      loadClassInfo () {
-        let _this = this
-        this.$axios.get('/classInfo').then(resp => {
-          if (resp && resp.status === 200) {
-            _this.classs = resp.data;
-          }
-        })
-      },
-
-      //查询
-      searchClick () {
-        let _this = this;
-        this.$axios
-          .post('/searchClass', {
-            keywords: this.keywords
-          }).then(resp => {
-          if (resp && resp.status === 200) {
-
-
-            _this.searchResult = resp.data;
-
-            _this.classs = _this.searchResult;
-
-
-          }
-        })
-
-      },
-
-
-      //显示新增界面
-      handleAdd: function () {
-        this.addFormVisible = true;
-        this.addForm = {
-          id: '',
-          classId: '',
-          className: '',
-        };
-      },
-      //新增
-      addSubmit: function () {
-        this.$refs.addForm.validate((valid) => {
-          if (valid) {
-            this.$confirm('确认提交吗？', '提示', {}).then(() => {
-              this.listenLoading = true;
-
-              // this.user.id = 88; id是自增的，所以当没有的时候就会默认地往后排序号
-
-              this.$axios
-                .post('/addClass', {
-                  // id: 12, id是自增的，所以当没有的时候就会默认地往后排序号
-                  classId:this.addForm.classId,
-                  className:this.addForm.className,
-                }).then(resp => {
-                if (resp.data == ''){
+            this.$axios
+              .post('/addClass', {
+                // id: 12, id是自增的，所以当没有的时候就会默认地往后排序号
+                classId: this.addForm.classId,
+                className: this.addForm.className
+              }).then(resp => {
+                if (resp.data === '') {
                   this.$message({
                     message: '添加失败',
                     type: 'failure'
-                  });
-                  this.listenLoading = false;
-                  this.addFormVisible = false;
+                  })
+                  this.listenLoading = false
+                  this.addFormVisible = false
                 }
                 if (resp && resp.status === 200) {
-                  this.listenLoading = false;
-                  this.addFormVisible = false;
+                  this.listenLoading = false
+                  this.addFormVisible = false
                   this.$message({
                     message: '添加成功',
                     type: 'success'
-                  });
-                  this.loadClassInfo();
+                  })
+                  this.loadClassInfo()
                   this.$emit('onSubmit')
                 }
               })
+          })
+        }
+      })
+    },
 
+    // 显示编辑界面
+    handleEdit: function (index, row) {
+      this.editFormVisible = true
+      // this.editForm = Object.assign({}, row);
+      this.editForm = {
+        id: row.id,
+        classId: row.classId,
+        className: row.className
+      }
+    },
+    // 编辑
+    editSubmit: function () {
+      this.$refs.editForm.validate((valid) => {
+        if (valid) {
+          this.$confirm('确认提交吗？', '提示', {}).then(() => {
+            this.listenLoading = true
 
-            });
-          }
-        });
-      },
-
-      //显示编辑界面
-      handleEdit: function (index,row) {
-        this.editFormVisible = true;
-        //this.editForm = Object.assign({}, row);
-        this.editForm = {
-          id: row.id,
-          classId: row.classId,
-          className: row.className,
-        };
-      },
-      //编辑
-      editSubmit: function () {
-        this.$refs.editForm.validate((valid) => {
-          if (valid) {
-            this.$confirm('确认提交吗？', '提示', {}).then(() => {
-              this.listenLoading = true;
-
-              this.$axios
-                .post('/updateClass', {
-                  id: this.editForm.id,
-                  classId: this.editForm.classId,
-                  className: this.editForm.className,
-                }).then(resp => {
-                if (resp.data == ''){
+            this.$axios
+              .post('/updateClass', {
+                id: this.editForm.id,
+                classId: this.editForm.classId,
+                className: this.editForm.className
+              }).then(resp => {
+                if (resp.data === '') {
                   this.$message({
                     message: '修改失败',
                     type: 'failure'
-                  });
-                  this.listenLoading = false;
-                  this.editFormVisible = false;
+                  })
+                  this.listenLoading = false
+                  this.editFormVisible = false
                 }
                 if (resp && resp.status === 200) {
-                  this.listenLoading = false;
-                  this.editFormVisible = false;
+                  this.listenLoading = false
+                  this.editFormVisible = false
                   this.$message({
                     message: '修改成功',
                     type: 'success'
-                  });
-                  this.loadClassInfo();
+                  })
+                  this.loadClassInfo()
                   this.$emit('onSubmit')
                 }
               })
-
-
-            });
-          }
-        });
-      },
-
-      //删除班级
-      deleteClass: function (index, row) {
-        this.$confirm('确认删除该记录吗?', '提示', {
-          type: 'warning'
-        }).then(() => {
-            this.listenLoading = true;
-            this.$axios     //{id: row.id}
-              .post('/deleteClass', {id: row.id}).then(resp => {
-              if (resp && resp.data.code === 100) {
-                this.listenLoading = false;
-                this.$message({
-                  message: '删除成功',
-                  type: 'success'
-                });
-                this.loadClassInfo()
-              }else {
-                this.$message({
-                  message: '删除失败',
-                  type: 'failure'
-                });
-                this.listenLoading = false;
-              }
-            })
-          }
-        ).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '已取消删除'
           })
+        }
+      })
+    },
+
+    // 删除班级
+    deleteClass: function (index, row) {
+      this.$confirm('确认删除该记录吗?', '提示', {
+        type: 'warning'
+      }).then(() => {
+        this.listenLoading = true
+        this.$axios // {id: row.id}
+          .post('/deleteClass', {id: row.id}).then(resp => {
+            if (resp && resp.data.code === 100) {
+              this.listenLoading = false
+              this.$message({
+                message: '删除成功',
+                type: 'success'
+              })
+              this.loadClassInfo()
+            } else {
+              this.$message({
+                message: '删除失败',
+                type: 'failure'
+              })
+              this.listenLoading = false
+            }
+          })
+      }
+      ).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
         })
-      },
-
-
-
+      })
     }
+
   }
+}
 </script>
 
 <style scoped>
