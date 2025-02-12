@@ -65,7 +65,7 @@
             :autosize="{ minRows: 8,maxRows:10}"></el-input>
         </el-form-item>
         <el-form-item label="作业图片" >
-          <el-image style="width: 100px; height: 100px" :src="url" :preview-src-list="srcList"></el-image>
+          <el-image style="width: 100px; height: 100px" :src="correctForm.thumbImage" :preview-src-list="correctForm.submitFiles"></el-image>
         </el-form-item>
         <el-form-item label="分数" prop="score">
           <el-input v-model="correctForm.score" auto-complete="off"></el-input>
@@ -103,7 +103,9 @@ export default {
       correctForm: {
         content: '',
         submit_content: '',
-        score: ''
+        score: '',
+        submitFiles: [],
+        thumbImage: ''
       },
       listenLoading: false
     }
@@ -116,21 +118,20 @@ export default {
 
     // 请求加载学生作业信息
     loadWorkInfo () {
-      let _this = this
       this.$axios
         .post('/getTeacherPersonalWork', {
           keywords: this.account
         }).then(resp => {
           if (resp && resp.status === 200) {
-            _this.works = resp.data
+            this.works = resp.data
 
             let tempWorkList = []
-            for (let i = 0; i < _this.works.length; i++) {
-              if (_this.workDetailId === _this.works[i].workDetail.id) {
-                tempWorkList.push(_this.works[i])
+            for (let i = 0; i < this.works.length; i++) {
+              if (this.workDetailId === this.works[i].workDetail.id) {
+                tempWorkList.push(this.works[i])
               }
             }
-            _this.works = tempWorkList
+            this.works = tempWorkList
           }
         })
     },
@@ -144,11 +145,21 @@ export default {
     // 显示批改界面
     handleCorrect: function (index, row) {
       this.correctFormVisible = true
-      // this.correctForm = Object.assign({}, row);
+      let images = row.submitFiles.split('|')
+      let urls = []
+      for (let imageFile of images) {
+        urls.push(`/api/images/${row.student.name}/${imageFile}`)
+      }
+      let thumb = ''
+      if (images.length >= 1) {
+        thumb = `/api/images/${row.student.name}/thumb_${images[0]}`
+      }
       this.correctForm = {
         content: row.workDetail.publishContent,
         submit_content: row.submitContent,
-        score: row.score
+        score: row.score,
+        submitFiles: urls,
+        thumbImage: thumb
       }
     },
 

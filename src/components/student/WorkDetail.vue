@@ -7,12 +7,12 @@
 
     <el-main style="padding-top: 10px;padding-left: 50px">
 
-      <el-row :gutter="30">
+      <el-row :gutter="30" style="display: flex;">
 
-        <el-col :span="11"><div class="grid-content bg-purple">
+        <el-col :span="11" style="display: flex; flex-direction: column; height: 100%;"><div class="grid-content bg-purple">
           <span style="font-size: 20px;font-weight: bold">作业内容</span>
           <el-input
-            :autosize="{ minRows: 20,maxRows:20}"
+            :autosize="{ minRows: 20}"
             type="textarea"
             readonly="true"
             prefix="题目题目题目"
@@ -20,43 +20,48 @@
             resize="none"
           ></el-input>
         </div></el-col>
-        <el-col :span="11"><div class="grid-content bg-purple">
-          <span style="font-size: 20px;font-weight: bold">答题区域</span>
+        <el-col :span="11" style="display: flex; flex-direction: column; height: 100%;"><div class="grid-content bg-purple">
+          <el-col><span style="font-size: 20px;font-weight: bold">答题区域</span></el-col>
           <el-input
             :autosize="{ minRows: 20}"
             type="textarea"
             v-model="submitContent"
             resize="none"
           ></el-input>
+          <el-input v-model="input" :placeholder="exsitedFiles" readonly="true" v-if="this.hasUploadedFile"></el-input>
         </div></el-col>
 
       </el-row>
     </el-main>
   <el-footer>
     <el-footer style="padding-right: 100px;text-align:right;">
-      <el-col :span="11" style="display: inline-flex; justify-content: space-between; align-items: center;">
+      <el-col :span="12" style="display: inline-flex; justify-content: space-between; align-items: center;">
         <p><strong>上传图片</strong></p>
+        <el-button v-if="needReload" @click="reupload">重传图片</el-button>
         <el-upload
-          class="upload-demo"
-          action="https://jsonplaceholder.typicode.com/posts/"
+          v-else
+          action="/api/postImages"
           :on-preview="handlePreview"
           :on-remove="handleRemove"
           :before-remove="beforeRemove"
           multiple
           :limit="3"
           :on-exceed="handleExceed"
-          :file-list="fileList">
-          <el-button size="small" type="primary">点击上传</el-button>
-          <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+          :on-success="handleUploadSuccess"
+          :file-list="fileList"
+          :data="uploadData">
+          <el-button size="medium" type="primary">点击上传</el-button>
+          <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过10Mb</div>
         </el-upload>
       </el-col>
-      <el-col :span="3"><el-button type="primary" style="background-color: #545c64;" v-on:click="workSubmit">提 交</el-button></el-col>
+      <el-col :span="1" offset="1"><el-button type="primary" style="background-color: #545c64;" v-on:click="workSubmit" size="medium">提 交</el-button></el-col>
     </el-footer>
   </el-footer>
   </el-container>
 </template>
 
 <script>
+
 export default {
   name: 'WorkDetail',
   data () {
@@ -64,6 +69,13 @@ export default {
       input: '',
       questionTextarea: '',
       submitContent: '',
+      fileList: [],
+      exsitedFiles: '',
+      hasUploadedFile: false,
+      needReload: false,
+      uploadData: {
+        username: localStorage.getItem('name')
+      },
       // 详情界面接收作业列表传过来的数据
       workData: this.$route.query.data,
       workId: this.$route.query.data.id,
@@ -83,16 +95,28 @@ export default {
     judgeState () {
       if (this.$route.query.data.state === '已提交') {
         this.submitContent = this.$route.query.data.submitContent
+        let files = this.$route.query.data.submitFiles.split('|')
+        this.exsitedFiles = '已使用图片:'
+        for (let file of files) {
+          this.exsitedFiles += ' ' + file
+          this.hasUploadedFile = true
+          this.needReload = true
+        }
       }
     },
     // 提交作业
     workSubmit: function () {
       this.$confirm('确认提交吗？', '提示', {}).then(() => {
         this.listenLoading = true
+        let fileList = []
+        for (let file of this.fileList) {
+          fileList.push(file.name)
+        }
         this.$axios
           .post('/submitAnswer', {
             workId: this.workId,
-            submitContent: this.submitContent
+            submitContent: this.submitContent,
+            files: fileList
           }).then(resp => {
             if (resp.data === '') {
               this.$message({
@@ -112,6 +136,29 @@ export default {
             }
           })
       })
+    },
+    reupload () {
+      this.hasUploadedFile = false
+      this.needReload = false
+    },
+    handleUploadSuccess (response, file, fileList) {
+      this.fileList = fileList
+      this.exsitedFiles = '已使用图片:'
+      for (let file of fileList) {
+        this.exsitedFiles += ' ' + file.name
+      }
+      this.hasUploadedFile = true
+    },
+    beforeRemove (file, fileList) {
+      return this.$confirm(`确定移除 ${file.name}？`)
+    },
+    handleRemove (file, fileList) {
+      this.fileList = fileList
+      this.exsitedFiles = '已使用图片:'
+      for (let file of fileList) {
+        this.exsitedFiles += ' ' + file.name
+      }
+      this.hasUploadedFile = fileList.lengh > 0
     }
   }
 }
