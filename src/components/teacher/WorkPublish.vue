@@ -4,7 +4,6 @@
 
       style="padding-top: 30px;padding-left: 200px ;  " >
       <el-row gutter="1px">
-
         <el-col :span="10"><div class="grid-content bg-purple">
           <span style="font-size: 20px;font-weight: bold">作业内容</span>
             <el-input
@@ -129,11 +128,9 @@ export default {
       answerTextarea: '', // 答案文本
 
       endTimePicker: '', // 截止时间
-      questionBanks: [], // 题库表格数据
       classes: [],
       classOptions: [],
       classOptionsValue: '', // 选中选择之后的值
-      multipleSelection: [], // 题库多选
 
       listenLoading: false,
       textarea: '',
@@ -161,39 +158,6 @@ export default {
   methods: {
     // 请求加载题库信息
     loadBankInfo () {
-      let _this = this
-      this.$axios.get('/questionBankInfo').then(resp => {
-        if (resp && resp.status === 200) {
-          _this.questionBanks = resp.data
-        }
-      })
-
-      this.$axios.get('/questionBankInfo').then(resp => {
-        if (resp && resp.status === 200) {
-          _this.questionBanks = resp.data
-        }
-      })
-
-      // 请求加载班级信息
-      this.$axios.get('/classInfo').then(resp => {
-        if (resp && resp.status === 200) {
-          _this.classes = resp.data
-
-          let tempClasses = []
-          for (let i = 0; i < _this.classes.length; ++i) {
-            let tempClassOption = {
-              value: '',
-              label: ''
-            }
-            // tempCourseOption.value = "选项"+ii;
-            tempClassOption.value = _this.classes[i].id
-            tempClassOption.label = _this.classes[i].className
-            tempClasses.push(tempClassOption)
-          }
-          this.classOptions = tempClasses
-        }
-      })
-
       let user2 = {
         account: this.account
       }
@@ -202,13 +166,29 @@ export default {
           user: user2
         }).then(resp => {
           if (resp && resp.status === 200) {
-            _this.teacherId = resp.data.id
+            this.teacherId = resp.data.id
           }
         })
-    },
+      // 请求加载班级信息
+      let toClasses = `/teacherClasses/${this.account}`
+      this.$axios.get(toClasses).then(resp => {
+        if (resp && resp.status === 200) {
+          this.classes = resp.data
 
-    handleSelectionChange (value) {
-      this.multipleSelection = value
+          let tempClasses = []
+          for (let i = 0; i < this.classes.length; ++i) {
+            let tempClassOption = {
+              value: '',
+              label: ''
+            }
+            // tempCourseOption.value = "选项"+ii;
+            tempClassOption.value = this.classes[i].id
+            tempClassOption.label = this.classes[i].className
+            tempClasses.push(tempClassOption)
+          }
+          this.classOptions = tempClasses
+        }
+      })
     },
 
     classOptionValueChange (value) {
@@ -216,16 +196,6 @@ export default {
     },
 
     handleWork: function () {
-      // let x = 0
-      // for (let i = 0; i < this.questionBanks.length; i++) {
-      //   for (let j = 0; j < this.multipleSelection.length; j++) {
-      //     if (this.questionBanks[i].id === this.multipleSelection[j].id) {
-      //       x += 1
-      //       this.worksDetail.publishContent += x + ' 、 ' + this.questionBanks[i].content + '\n\n'
-      //       this.worksDetail.answer += x + ' 、 ' + this.questionBanks[i].answer + '\n\n'
-      //     }
-      //   }
-      // }
       this.worksDetail.publishContent = this.textarea
       this.worksDetail.answer = ''
     },

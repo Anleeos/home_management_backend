@@ -12,7 +12,6 @@ import TeacherHome from '@/components/TeacherHome'
 
 import TeacherWork from '@/components/teacher/TeacherWork'
 import WorkPublish from '@/components/teacher/WorkPublish'
-import BankManagement from '@/components/teacher/BankManagement'
 import WorkDetailList from '@/components/teacher/WorkDetailList'
 import WorkDetail from '@/components/student/WorkDetail'
 
@@ -134,14 +133,6 @@ export default new Router({
           path: '/workPublish',
           name: 'WorkPublish',
           component: WorkPublish,
-          meta: {
-            requireAuth: true
-          }
-        },
-        {
-          path: '/bankManagement',
-          name: 'BankManagement',
-          component: BankManagement,
           meta: {
             requireAuth: true
           }
