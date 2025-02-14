@@ -90,7 +90,6 @@ export default {
       // 详情界面接收作业列表传过来的数据
       workDetailId: this.$route.query.data.id,
       workDetail: this.$route.query.data,
-      workId: [],
       works: [], // 个人账号里面发布的所有作业
       input: '',
       url: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
@@ -103,6 +102,8 @@ export default {
       },
       // 新增界面数据
       correctForm: {
+        workTitle: '未定义',
+        workId: 0,
         content: '',
         submit_content: '',
         score: '',
@@ -156,6 +157,8 @@ export default {
         thumb = `/api/images/${row.student.name}/thumb_${images[0]}`
       }
       this.correctForm = {
+        workTitle: row.title,
+        workId: row.id,
         content: row.workDetail.publishContent,
         submit_content: row.submitContent,
         score: row.score,
@@ -174,7 +177,7 @@ export default {
             this.$axios
               .post('/checkWork', {
 
-                workId: this.workId,
+                workId: this.correctForm.workId,
                 score: this.correctForm.score
               }).then(resp => {
                 if (resp.data === '') {

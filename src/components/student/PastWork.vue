@@ -25,33 +25,78 @@
         <el-aside width="20px">
         </el-aside>
         <el-main style="padding-top: 10px;padding-left: 50px">
-          <el-col :span="23">
-            <h1 style="text-align: left;">待做作业</h1>
-            <el-collapse v-model="activeName" accordion>
-            <el-collapse-item v-for="(work, index) in works" :key="index">
-              <template slot="title">
-                <div class="work_title">
-                  <span><strong>{{ work.workDetail.workTitle }}</strong></span>
-                  <span :class="state-lable">{{ work.state }}</span>
-                </div>
+          <el-table
+            :data="works"
+            style="width: 100%"
+            height="450">
+            <el-table-column
+              fixed
+              prop="id"
+              label="序号"
+              width="100" >
+              <template slot-scope="scope">
+                {{scope.$index+1}}
               </template>
-              <el-row :gutter="20" justify="space-between">
-                <el-col :span="12" style="text-align: left;">
-                  <p><strong>教师：</strong>{{ work.teacher.name }}<strong style="margin-left: 20px;">截止日期：</strong>{{ work.endTime }}</p>
-                </el-col>
-                <el-col :span="12" style="text-align: right;">
-                  <el-button @click="handleDetail(index, work)">提交作业</el-button>
-                </el-col>
-              </el-row>
-              <div>
-                <el-card class="work-content">
-                  <div>{{ work.workDetail.publishContent }}</div>
-                </el-card>
-              </div>
-            </el-collapse-item>
-          </el-collapse>
-          </el-col>
+            </el-table-column>
+            <el-table-column
+              fit="true"
+              prop="workDetail.teacher.name"
+              label="教师"
+              width="150">
+            </el-table-column>
+            <el-table-column
+              fit="true"
+              prop="workDetail.workTitle"
+              label="标题"
+              width="200">
+            </el-table-column>
+            <el-table-column
+              fit="true"
+              prop="workDetail.startTime"
+              label="日期"
+              width="200">
+            </el-table-column>
+            <el-table-column
+              fit="true"
+              prop="workDetail.endTime"
+              label="截止日期"
+              width="200">
+            </el-table-column>
+            <el-table-column
+              fit="true"
+              prop="state"
+              label="状态"
+              width="100">
+            </el-table-column>
+            <el-table-column
+              fit="true"
+              prop="score"
+              label="分数"
+              width="100">
+            </el-table-column>
+            <el-table-column  fixed="right" min-width="200" label="操作" >
+              <template slot-scope="scope">
+                <el-button
+                  size="small"
+                  @click="handleDetail(scope.$index, scope.row)">作业详情</el-button>
+                <el-button
+                  size="small"
+                  type="danger"
+                  @click="handleCheck(scope.$index, scope.row)">查看答案</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
         </el-main>
+        <el-footer>
+          <el-pagination
+            background
+            layout="prev, pager, next"
+            @current-change="handleCurrentChange"
+            :page-size="7"
+            style="padding-top: 20px; padding-right: 50px; text-align:right;"
+            :total="50">
+          </el-pagination>
+        </el-footer>
       </el-container>
 
       <!--查看答案界面-->
@@ -134,26 +179,12 @@ export default {
   methods: {
     // 请求加载学生作业信息
     loadWorkInfo () {
-      let _this = this
-      // this.$axios.get('/workInfo').then(resp => {
-      //   if (resp && resp.status === 200) {
-      //     _this.works = resp.data;
-      //   }
-      // });
-
       this.$axios
         .post('/getStudentPersonalWork', {
           keywords: this.account
         }).then(resp => {
           if (resp && resp.status === 200) {
-            _this.works = resp.data
-            for (let work of this.works) {
-              if (work.state === '未提交') {
-                this.to_do_works.push(work)
-              } else if (work.state === '已提交') {
-                this.done_works.push(work)
-              }
-            }
+            this.works = resp.data
           }
         })
     },

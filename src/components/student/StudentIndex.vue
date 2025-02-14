@@ -66,7 +66,8 @@
                   <p><strong>教师：</strong>{{ work.workDetail.teacher.name }}<strong style="margin-left: 20px;">截止日期：</strong>{{ work.workDetail.endTime }}</p>
                 </el-col>
                 <el-col :span="12" style="text-align: right;">
-                  <el-button @click="handleDetail(index, work)">提交作业</el-button>
+                  <el-button type="warning" @click="handleDetail(index, work)" v-if="work.state != '已完成'">提交作业</el-button>
+                  <el-button v-else type="success" disabled>分数:{{ work.score }}</el-button>
                 </el-col>
               </el-row>
               <div>
@@ -173,10 +174,16 @@ export default {
         }).then(resp => {
           if (resp && resp.status === 200) {
             _this.works = resp.data
+            let today = new Date()
+            today.setHours(0, 0, 0, 0)
             for (let work of this.works) {
+              let endDate = new Date(work.endTime)
+              if (endDate < today) {
+                continue
+              }
               if (work.state === '未提交') {
                 this.to_do_works.push(work)
-              } else if (work.state === '已提交') {
+              } else {
                 this.done_works.push(work)
               }
             }
