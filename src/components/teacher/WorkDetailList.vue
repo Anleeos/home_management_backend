@@ -86,9 +86,11 @@ export default {
   data () {
     return {
       account: localStorage.getItem('account'),
+      query: this.$route.query,
       // 详情界面接收作业列表传过来的数据
-      workDetailId: this.$route.query.data.workDetail.id,
-      workId: this.$route.query.data.id,
+      workDetailId: this.$route.query.data.id,
+      workDetail: this.$route.query.data,
+      workId: [],
       works: [], // 个人账号里面发布的所有作业
       input: '',
       url: 'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
@@ -115,12 +117,11 @@ export default {
     this.loadWorkInfo()
   },
   methods: {
-
     // 请求加载学生作业信息
     loadWorkInfo () {
       this.$axios
-        .post('/getTeacherPersonalWork', {
-          keywords: this.account
+        .post('/getWorks', {
+          keywords: this.workDetailId
         }).then(resp => {
           if (resp && resp.status === 200) {
             this.works = resp.data

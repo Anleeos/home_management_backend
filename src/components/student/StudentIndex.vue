@@ -37,7 +37,7 @@
               </template>
               <el-row :gutter="20" justify="space-between">
                 <el-col :span="12" style="text-align: left;">
-                  <p><strong>教师：</strong>{{ work.teacher.name }}<strong style="margin-left: 20px;">截止日期：</strong>{{ work.endTime }}</p>
+                  <p><strong>教师：</strong>{{ work.workDetail.teacher.name }}<strong style="margin-left: 20px;">截止日期：</strong>{{ work.workDetail.endTime }}</p>
                 </el-col>
                 <el-col :span="12" style="text-align: right;">
                   <el-button @click="handleDetail(index, work)">提交作业</el-button>
@@ -63,7 +63,7 @@
               </template>
               <el-row :gutter="20" justify="space-between">
                 <el-col :span="12" style="text-align: left;">
-                  <p><strong>教师：</strong>{{ work.teacher.name }}<strong style="margin-left: 20px;">截止日期：</strong>{{ work.endTime }}</p>
+                  <p><strong>教师：</strong>{{ work.workDetail.teacher.name }}<strong style="margin-left: 20px;">截止日期：</strong>{{ work.workDetail.endTime }}</p>
                 </el-col>
                 <el-col :span="12" style="text-align: right;">
                   <el-button @click="handleDetail(index, work)">提交作业</el-button>

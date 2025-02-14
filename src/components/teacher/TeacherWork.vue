@@ -34,13 +34,13 @@
           </el-table-column>
           <el-table-column
             fit="true"
-            prop="workDetail.workTitle"
+            prop="workTitle"
             label="作业标题"
             width="200">
           </el-table-column>
           <el-table-column
             fit="true"
-            prop="student.mClass.className"
+            prop="aclass.className"
             label="发布班级"
             width="200">
           </el-table-column>
@@ -58,13 +58,6 @@
             label="截止时间"
             width="200"
             sortable>
-          </el-table-column>
-          <el-table-column
-            fit="true"
-            prop="process"
-            label="完成进度"
-            width="200">
-            <el-progress :width="45" :height="45" type="circle" :percentage="processData.process" ></el-progress>
           </el-table-column>
           <el-table-column  fixed="right" label="操作" min-width="200" >
 
@@ -118,11 +111,6 @@ export default {
   // mounted，组件挂载后，此方法执行后，页面显示
   mounted: function () {
     this.loadWorkInfo()
-    console.log('测试' + this.laccount)
-    console.log('测试' + this.laccount)
-    console.log('测试' + this.laccount)
-    console.log('测试' + this.laccount)
-    console.log('测试' + this.laccount)
   },
 
   methods: {
@@ -140,16 +128,9 @@ export default {
     // 请求加载作业信息
     loadWorkInfo () {
       let _this = this
-      // this.$axios.get('/workInfo').then(resp => {
-      //   if (resp && resp.status === 200) {
-      //     _this.works = resp.data;
-      //   }
-      // });
 
       this.$axios
-        .post('/getTeacherPersonalWork', {
-          keywords: this.account
-        }).then(resp => {
+        .get(`/publishedWorks/${this.account}`).then(resp => {
           if (resp && resp.status === 200) {
             _this.works = resp.data
           }
