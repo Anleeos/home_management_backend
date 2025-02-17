@@ -85,7 +85,7 @@ export default {
     },
 
     judgeState () {
-      if (this.$route.query.data.state === '已提交') {
+      if (this.$route.query.data.state !== '未提交') {
         this.submitContent = this.$route.query.data.submitContent
         let files = this.$route.query.data.submitFiles.split('|')
         this.exsitedFiles = '已使用图片:'

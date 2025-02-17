@@ -151,11 +151,6 @@ export default {
   // mounted，组件挂载后，此方法执行后，页面显示
   mounted: function () {
     this.loadWorkInfo()
-    console.log('测试' + this.account)
-    console.log('测试' + this.account)
-    console.log('测试' + this.account)
-    console.log('测试' + this.account)
-    console.log('测试' + this.account)
   },
 
   methods: {
@@ -177,14 +172,14 @@ export default {
             let today = new Date()
             today.setHours(0, 0, 0, 0)
             for (let work of this.works) {
-              let endDate = new Date(work.endTime)
-              if (endDate < today) {
-                continue
-              }
-              if (work.state === '未提交') {
-                this.to_do_works.push(work)
-              } else {
-                this.done_works.push(work)
+              let endDate = new Date(work.workDetail.endTime)
+              if (endDate >= today) {
+                console.log('bigger')
+                if (work.state === '未提交') {
+                  this.to_do_works.push(work)
+                } else {
+                  this.done_works.push(work)
+                }
               }
             }
           }
