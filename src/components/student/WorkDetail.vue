@@ -6,76 +6,69 @@
     </el-header>
 
     <el-main style="padding-top: 10px;padding-left: 50px">
-
-      <el-row :gutter="30" style="display: flex;">
-
-        <el-col :span="11" style="display: flex; flex-direction: column; height: 100%;"><div class="grid-content bg-purple">
-          <span style="font-size: 20px;font-weight: bold">作业内容</span>
-          <el-input
-            :autosize="{ minRows: 20}"
-            type="textarea"
-            readonly="true"
-            prefix="题目题目题目"
-            v-model="workData.workDetail.publishContent"
-            resize="none"
-          ></el-input>
-        </div></el-col>
-        <el-col :span="11" style="display: flex; flex-direction: column; height: 100%;"><div class="grid-content bg-purple">
-          <el-col><span style="font-size: 20px;font-weight: bold">答题区域</span></el-col>
-          <el-input
-            :autosize="{ minRows: 20}"
-            type="textarea"
-            v-model="submitContent"
-            resize="none"
-          ></el-input>
-          <el-input v-model="input" :placeholder="exsitedFiles" readonly="true" v-if="this.hasUploadedFile"></el-input>
-        </div></el-col>
-
+      <div>{{ previewList }}</div>
+      <el-row :gutter="30" type="flex">
+        <el-col :span="10" style="display: flex; flex-direction: column; height: 100%;">
+          <div class="grid-content bg-purple">
+            <span style="font-size: 20px;font-weight: bold">作业内容</span>
+            <el-input :autosize="{ minRows: 20 }" type="textarea" :readonly="true" prefix="题目题目题目"
+              v-model="workData.workDetail.publishContent" resize="none"></el-input>
+          </div>
+        </el-col>
+        <el-col :span="10" style="display: flex; flex-direction: column; height: 100%;">
+          <div class="grid-content bg-purple">
+            <el-col><span style="font-size: 20px;font-weight: bold">答题区域</span></el-col>
+            <el-input :autosize="{ minRows: 20 }" type="textarea" v-model="submitContent" resize="none"></el-input>
+          </div>
+        </el-col>
+        <el-col :span="4" style="align-self: baseline;">
+          <p><strong>上传图片</strong></p>
+          <el-upload action="/api/postImages" :on-remove="handleRemove" list-type="picture" :limit="3"
+            :on-success="handleUploadSuccess" :file-list="fileList" :data="uploadData"
+            :on-preview="handlePicturePreview">
+            <el-button size="medium" type="primary">点击上传</el-button>
+            <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过10Mb</div>
+            <el-image-viewer
+              v-if="showImageViewer"
+              :on-close="onCloseImageViewer"
+              :url-list="previewList"
+              :z-index="3000"
+              :initial-index="initialIndex"
+            />
+          </el-upload>
+        </el-col>
       </el-row>
     </el-main>
-  <el-footer>
-    <el-footer style="padding-right: 100px;text-align:right;">
-      <el-col :span="12" style="display: inline-flex; justify-content: space-between; align-items: center;">
-        <p><strong>上传图片</strong></p>
-        <el-button v-if="needReload" @click="reupload">重传图片</el-button>
-        <el-upload
-          v-else
-          action="/api/postImages"
-          :on-preview="handlePreview"
-          :on-remove="handleRemove"
-          :before-remove="beforeRemove"
-          multiple
-          :limit="3"
-          :on-exceed="handleExceed"
-          :on-success="handleUploadSuccess"
-          :file-list="fileList"
-          :data="uploadData">
-          <el-button size="medium" type="primary">点击上传</el-button>
-          <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过10Mb</div>
-        </el-upload>
-      </el-col>
-      <el-col :span="1" offset="1"><el-button type="primary" style="background-color: #545c64;" v-on:click="workSubmit" size="medium">提 交</el-button></el-col>
+    <el-footer>
+      <el-footer style="padding-right: 100px;text-align:right;">
+
+        <el-col :span="1" :offset="1"><el-button type="primary" style="background-color: #545c64;"
+            v-on:click="workSubmit" size="medium">提 交</el-button></el-col>
+      </el-footer>
     </el-footer>
-  </el-footer>
   </el-container>
 </template>
 
 <script>
-
+import ElImageViewer from 'element-ui/packages/image/src/image-viewer'
 export default {
   name: 'WorkDetail',
+  components: {
+    'el-image-viewer': ElImageViewer
+  },
   data () {
     return {
       input: '',
       questionTextarea: '',
       submitContent: '',
       fileList: [],
+      previewList: [],
       exsitedFiles: '',
-      hasUploadedFile: false,
-      needReload: false,
       uploadData: {
         username: localStorage.getItem('name')
       },
+      showImageViewer: false,
+      initialIndex: 0,
       // 详情界面接收作业列表传过来的数据
       workData: this.$route.query.data,
       workId: this.$route.query.data.id,
@@ -97,10 +90,14 @@ export default {
         this.submitContent = this.$route.query.data.submitContent
         let files = this.$route.query.data.submitFiles.split('|')
         this.exsitedFiles = '已使用图片:'
+        this.fileList = []
         for (let file of files) {
           this.exsitedFiles += ' ' + file
-          this.hasUploadedFile = true
-          this.needReload = true
+          this.fileList.push({
+            name: file,
+            url: `/api/images/${this.uploadData.username}/thumb_${file}`
+          })
+          this.previewList.push(`/api/images/${this.uploadData.username}/${file}`)
         }
       }
     },
@@ -137,17 +134,13 @@ export default {
           })
       })
     },
-    reupload () {
-      this.hasUploadedFile = false
-      this.needReload = false
-    },
     handleUploadSuccess (response, file, fileList) {
       this.fileList = fileList
       this.exsitedFiles = '已使用图片:'
       for (let file of fileList) {
         this.exsitedFiles += ' ' + file.name
+        this.previewList.push(file.url)
       }
-      this.hasUploadedFile = true
     },
     beforeRemove (file, fileList) {
       return this.$confirm(`确定移除 ${file.name}？`)
@@ -158,7 +151,16 @@ export default {
       for (let file of fileList) {
         this.exsitedFiles += ' ' + file.name
       }
-      this.hasUploadedFile = fileList.lengh > 0
+    },
+    handlePicturePreview (file) {
+      let index = this.fileList.indexOf(file)
+      if (index >= 0) {
+        this.initialIndex = index
+      }
+      this.showImageViewer = true
+    },
+    onCloseImageViewer () {
+      this.showImageViewer = false
     }
   }
 }
@@ -166,7 +168,7 @@ export default {
 </script>
 
 <style scoped>
-  span {
-    pointer-events: none;
-  }
+span {
+  pointer-events: none;
+}
 </style>

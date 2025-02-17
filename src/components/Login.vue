@@ -30,7 +30,7 @@ export default {
     return {
       logining: false,
       loginForm: {
-        account: '116263000101',
+        account: '20250101',
         password: '123456'
       },
       rules2: {

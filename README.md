@@ -1,56 +1,18 @@
-# vue-workpigai
-作业批改系统
+# 作业批改系统
+功能：
 
-大三课程设计作业
-要求：
-深入研究作业布置、作业提交、作业批改和作业点评的业务特点以及相关参与人员的职责，建立相应的模型，开发一个提供以下功能的系统。
-1)	题库管理
-2)	作业布置
-3)	作业提交
-4)	作业批改
-5)	分数统计
-6)	作业情况查阅
-7)	作业范例学习和点评
+1. 作业发布：老师每次可以对一个班级发布一个作业
+2. 作业提交：学生可以对每个作业提交自己的答案，在提交以后截止或批改之前可以重新提交
+3. 作业批改：可以查看学生的答案，并给出相应评分
+4. 作业查看：学生查看自己已完成的作业答案
+5. 作业数据统计：老师可以查看作业的完成情况、已评分部分的平均分数等统计数据
 
-除了分数统计，其他功能都实现了，但是有一些小bug
-
-
-这次作业分前后端实现，springboot+vue框架开发，后台链接https://github.com/FYZ9628/workpigai，前端链接
-https://github.com/FYZ9628/vue-workpigai
-前端开发用到了element工具，链接https://element.eleme.cn/#/zh-CN
-
-
-
-
-
-
-
-
-> A Vue.js project
-
-## Build Setup
-
+## 运行步骤
+在项目目录地址栏输入 cmd 后，输入下列命令
 ``` bash
-# install dependencies
+# 只需第一次运行时输入，安装项目
 npm install
 
-# serve with hot reload at localhost:8080
+# 运行项目
 npm run dev
-
-# build for production with minification
-npm run build
-
-# build for production and view the bundle analyzer report
-npm run build --report
-
-# run unit tests
-npm run unit
-
-# run e2e tests
-npm run e2e
-
-# run all tests
-npm test
 ```
-
-For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
