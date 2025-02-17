@@ -2,24 +2,6 @@
     <div>
       <el-container>
         <el-header style="padding-top: 20px;padding-left: 50px;text-align:left;">
-        <div >
-
-          <el-input
-            @keyup.enter.native="searchClick"
-            placeholder="请输入发布教师、作业标题"
-            prefix-icon="el-icon-search"
-            size="medium"
-            style="width: 400px;margin-right: 10px"
-            v-model="keywords">
-          </el-input>
-          <el-button size="medium" type="primary" icon="el-icon-search"
-                     style="background-color: #545c64" @click="searchClick">搜 索</el-button>
-
-<!--          <el-input style="width: 300px" v-model="input" placeholder="请输入内容"></el-input>-->
-<!--          <el-button type="primary" style="background-color: #545c64" v-on:click="getUsers">查询</el-button>-->
-
-        </div>
-
         </el-header>
 
         <el-aside width="20px">
