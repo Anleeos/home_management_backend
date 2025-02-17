@@ -45,7 +45,7 @@
             :autosize="{ minRows: 8, maxRows: 10 }"></el-input>
         </el-form-item>
         <el-form-item label="作业图片">
-          <el-image style="width: 100px; height: 100px" :src="correctForm.thumbImage"
+          <el-image v-for="(thumbImage, i) in correctForm.thumbImages" style="width: 100px; height: 100px; margin-left: 10px" :src="thumbImage" :key="i" :initial-index="i"
             :preview-src-list="correctForm.submitFiles"></el-image>
         </el-form-item>
         <el-form-item label="分数" prop="score">
@@ -93,7 +93,7 @@ export default {
         submit_content: '',
         score: '',
         submitFiles: [],
-        thumbImage: ''
+        thumbImages: []
       },
       listenLoading: false
     }
@@ -152,12 +152,10 @@ export default {
       this.correctFormVisible = true
       let images = row.submitFiles.split('|')
       let urls = []
+      let thumbs = []
       for (let imageFile of images) {
         urls.push(`/api/images/${row.student.name}/${imageFile}`)
-      }
-      let thumb = ''
-      if (images.length >= 1) {
-        thumb = `/api/images/${row.student.name}/thumb_${images[0]}`
+        thumbs.push(`/api/images/${row.student.name}/thumb_${imageFile}`)
       }
       this.correctForm = {
         workTitle: row.title,
@@ -166,7 +164,7 @@ export default {
         submit_content: row.submitContent,
         score: row.score,
         submitFiles: urls,
-        thumbImage: thumb
+        thumbImages: thumbs
       }
     },
 
