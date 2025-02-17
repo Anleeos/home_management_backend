@@ -1,8 +1,8 @@
 <template>
-  <body id="poster">
+  <body id="poster" style="display: flex; justify-content: flex-end; align-items: center;">
   <el-form :model="loginForm" :rules="rules2" ref="loginForm" class="login-container" label-position="left"
            label-width="0px">
-    <h3 class="login_title">系统登录</h3>
+    <h3 class="login_title">欢迎使用作业批改系统</h3>
     <el-form-item prop="account">
       <el-input type="text" v-model="loginForm.account"
                 auto-complete="off" placeholder="账号"></el-input>
@@ -11,9 +11,6 @@
       <el-input type="password" v-model="loginForm.password"
                 auto-complete="off" placeholder="密码" v-on:keyup.enter.native="login"></el-input>
     </el-form-item>
-
-    <el-checkbox v-model="checked" class="remember">记住密码</el-checkbox>
-
     <el-form-item style="width: 100%">
       <el-button type="primary" style="width: 100%;background: #505458;
       border: none" @click.native.prevent="login" :loading="logining">登录</el-button>
@@ -91,7 +88,7 @@ export default {
 
 <style>
   #poster {
-    background: url("../assets/login_background.jpg") no-repeat center;
+    background: url("../assets/login_background.png") no-repeat center;
     height: 100%;
     width: 100%;
     background-size: cover;

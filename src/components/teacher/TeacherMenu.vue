@@ -9,7 +9,7 @@
     router :default-active="$route.path"
     mode="horizontal"
 
-    background-color="#545c64"
+    background-color="#1ABC9C"
     text-color="#fff"
     active-text-color="#ffd04b"
     style="min-width: 1300px;max-height: 120px"
