@@ -6,7 +6,6 @@
     </el-header>
 
     <el-main style="padding-top: 10px;padding-left: 50px">
-      <div>{{ previewList }}</div>
       <el-row :gutter="30" type="flex">
         <el-col :span="10" style="display: flex; flex-direction: column; height: 100%;">
           <div class="grid-content bg-purple">
